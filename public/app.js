@@ -1,6 +1,7 @@
 // const { default: axios } = require("axios");
 
-const url = "http://localhost:5000";
+// const url = "http://localhost:5000";
+const url = "https://login-signup-jwt.herokuapp.com";
 // const axios = require("axios");
 
 const signup = () => {
