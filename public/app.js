@@ -1,8 +1,5 @@
-// const { default: axios } = require("axios");
-
 // const url = "http://localhost:5000";
 const url = "https://login-signup-jwt.herokuapp.com";
-// const axios = require("axios");
 
 const signup = () => {
   let userName = document.getElementById("name").value;
@@ -11,7 +8,7 @@ const signup = () => {
   // console.log(userEmail, userName, userPassword);
   axios({
     method: "post",
-    url: url + "/signup",
+    url: url + "/auth/signup",
     data: {
       userName: userName,
       userEmail: userEmail,
@@ -37,7 +34,7 @@ const login = () => {
 
   axios({
     method: "post",
-    url: url + "/login",
+    url: url + "/auth/login",
     data: {
       currentEmail: currentEmail,
       currentPassword: currentPassword,
