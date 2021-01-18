@@ -1,7 +1,6 @@
-const url = "http://localhost:5000";
-// const url = "https://login-signup-jwt.herokuapp.com";
+// const url = "http://localhost:5000";
+const url = "https://login-signup-jwt.herokuapp.com";
 const socket = io(url);
-socket.on;
 
 const signup = () => {
   let userName = document.getElementById("name").value;
