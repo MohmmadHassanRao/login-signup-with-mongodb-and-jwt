@@ -6,42 +6,46 @@
     <link rel="stylesheet" href="style.css" />
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-    <title>Sign up</title>
+    <title>Login</title>
   </head>
   <body>
-    <!-- <h1>Sign up now</h1>
-    <form onsubmit="return signup()">
-      Name: <input type="text" id="name" required /> <br />
-      Email: <input type="email" id="email" required /> <br />
-      Password:
-      <input type="password" id="password" required />
+    <!-- <h1>Login</h1>
+    <form onsubmit="return login()">
+      <input type="email" id="currentEmail" /><br />
+      <input type="password" id="currentPassword" /><br />
       <input type="submit" />
+      <a href="./forgetPassword.html"><small>forgot password?</small></a>
     </form> -->
 
     <section id="cart-section">
       <div class="container">
         <div class="row">
-          <form onsubmit="return signup()">
+          <form onsubmit="return login()">
             <div class="cart cart3">
               <div style="z-index: 1" class="column">
                 <div class="log-in-area column">
-                  <h2><span>Sign Up</span></h2>
-                  <label class="column" for=""
-                    >User Name <input type="text" required id="name" />
-                  </label>
+                  <h2><span>Log In</span></h2>
+
                   <label class="column" for="">
                     Email
-                    <input type="email" required id="email" />
+                    <input type="email" required id="currentEmail" />
                   </label>
                   <label class="column" for="">
                     Password
-                    <input type="password" required id="password" />
+                    <input type="password" required id="currentPassword" />
                   </label>
+                  <small class="forgetP"
+                    ><a href="forgetPassword.html" class="forgetP"
+                      >Forgot Password?</a
+                    >
+                  </small>
                 </div>
                 <div class="button-area column">
-                  <button>Continue</button>
+                  <button>Log in</button>
                   <div class="account-area">
-                    <p>Have account?<a href="./login.html"> Log in here</a></p>
+                    <p>
+                      Don't have account?<a href="./index.html"> SignUp here</a>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -50,7 +54,7 @@
         </div>
       </div>
     </section>
-
-    <script src="app.js"></script>
   </body>
+
+  <script src="app.js"></script>
 </html>

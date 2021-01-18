@@ -1,0 +1,21 @@
+@import url("https://fonts.googleapis.com/css?family=Playfair+Display:400,900|Poppins:400,500");
+
+body {
+  background: linear-gradient(147deg, #8c54e9 0%, #4b76e7 74%);
+  min-height: 100vh;
+  width: 100%;
+  color: white;
+}
+.tweetContainer {
+  display: flex;
+}
+.tweetContainer > div {
+  margin: 20px;
+}
+#allTweets {
+  cursor: pointer;
+}
+.tweet {
+  font-size: 0.9em;
+  color: #c1b5ec;
+}

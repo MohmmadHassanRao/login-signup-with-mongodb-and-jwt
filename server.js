@@ -5,15 +5,15 @@ const morgan = require("morgan");
 const cors = require("cors");
 const http = require("http");
 const path = require("path");
-// const bcrypt = require("bcrypt-inzi");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
-// const SERVER_SECRET = process.env.SECRET || "1234";
 const { SERVER_SECRET } = require("./core/");
 const authRoutes = require("./routes/auth");
-var { userModel } = require("./dbrepo/models");
+var { userModel, tweetModel } = require("./dbrepo/models");
+const { resolveSoa } = require("dns");
 var app = express();
 const server = http.createServer(app);
+console.log("tweets==>", tweetModel);
 // console.log("userModel==>", userModel);
 // console.log("server secret==>>", SERVER_SECRET);
 
@@ -27,6 +27,33 @@ app.use(
   })
 );
 app.use(morgan("dev"));
+
+app.post("/tweets", (req, res) => {
+  if (!req.body.tweet || !req.body.email) {
+    res.status(403).send(`
+              please send tweet in json body.
+              e.g:
+              {
+                email:"hassan@gmail.com"
+                  tweet:'Something'
+              }`);
+    return;
+  }
+
+  userModel.findOneAndUpdate(
+    { email: req.body.email },
+    { $push: { tweets: { tweet: req.body.tweet } } },
+    function (err, data) {
+      if (!err) {
+        // userModel.tweets.push({ tweet: req.body.tweet });
+        console.log(data);
+        res.send(data);
+      } else {
+        res.status(500).send(JSON.stringify(err));
+      }
+    }
+  );
+});
 
 // from routes
 app.use("/auth", authRoutes);
@@ -45,7 +72,7 @@ app.use(function (req, res, next) {
       const diff = nowDate - issueDate; // 86,400,00 milliseconds = 24 hrs
 
       // token will expire after 1 min
-      if (diff > 10000) {
+      if (diff > 3000000) {
         res.status(401).send("token expired");
       } else {
         // issue new token
@@ -73,24 +100,38 @@ app.use(function (req, res, next) {
 app.get("/userData", (req, res, next) => {
   console.log(req.body);
 
-  userModel.findById(req.body.jToken.id, "name email", function (err, data) {
+  userModel.findById(
+    req.body.jToken.id,
+    "name email tweets",
+    function (err, data) {
+      if (!err) {
+        res.send({
+          userData: {
+            id: data._id,
+            name: data.name,
+            email: data.email,
+            tweets: data.tweets,
+          },
+          // userData: data,
+        });
+      } else {
+        res.status(500).send({
+          message: "server error",
+        });
+      }
+    }
+  );
+});
+app.get("/allTweets", (req, res) => {
+  userModel.find((err, data) => {
     if (!err) {
-      res.send({
-        userData: {
-          id: data._id,
-          name: data.name,
-          email: data.email,
-        },
-        // userData: data,
-      });
+      console.log(data);
+      res.send(data);
     } else {
-      res.status(500).send({
-        message: "server error",
-      });
+      res.status(500).send("db erro");
     }
   });
 });
-
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log("server is running on: ", PORT);

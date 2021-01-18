@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <title>Tweets</title>
+  </head>
+
+  <body onload="getData()">
+    <h1>Welcome <span id="welcomeUser"></span> to ABC</h1>
+    <h2>Here's your data</h2>
+    <h3>Your ID: <span id="currentUserId"></span></h3>
+    <h3>Your Name: <span id="currentUserName"></span></h3>
+    <h3>Your Email: <span id="currentUserEmail"></span></h3>
+    <h1>Post Tweets</h1>
+    <div class="tweetContainer">
+      <div id="userTweets">
+        <h2>your tweets</h2>
+        <h3 id="noTweets"></h3>
+      </div>
+      <div id="allTweets">
+        <h2 onclick="getAllTweets()">All Tweets</h2>
+      </div>
+    </div>
+    <script src="../app.js"></script>
+  </body>
+</html>

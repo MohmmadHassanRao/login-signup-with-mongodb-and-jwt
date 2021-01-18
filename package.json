@@ -21,6 +21,7 @@
     "mongoose": "^5.11.10",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.7",
-    "parser": "^0.1.4"
+    "parser": "^0.1.4",
+    "postmark": "^2.7.0"
   }
 }
