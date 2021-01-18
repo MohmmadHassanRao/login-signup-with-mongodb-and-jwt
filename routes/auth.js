@@ -5,7 +5,7 @@ const { userModel, otpModel } = require("../dbrepo/models");
 const api = express.Router();
 const { SERVER_SECRET } = require("../core/");
 const postMark = require("postmark");
-const client = new postMark.Client("d11001a3-e06d-4260-b243-bb09ae367935");
+const client = process.env.POSTMARK;
 console.log("userModel=>", userModel);
 console.log("server Secret=>", SERVER_SECRET);
 

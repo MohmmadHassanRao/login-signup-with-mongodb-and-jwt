@@ -41,7 +41,7 @@ var userSchema = new mongoose.Schema({
   name: String,
   email: String,
   password: String,
-  tweets: [{ tweet: String }],
+  // tweets: [{ tweet: String }],
   createdOn: { type: Date, default: Date.now },
 });
 
@@ -50,20 +50,21 @@ var otpSchema = new mongoose.Schema({
   otpCode: String,
   createdOn: { type: Date, default: Date.now },
 });
-// var tweetSchema = new mongoose.Schema({
-//   name: String,
-//   tweet: String,
-//   createdOn: { type: Date, default: Date.now },
-// });
+var tweetSchema = new mongoose.Schema({
+  email: String,
+  name: String,
+  tweet: String,
+  createdOn: { type: Date, default: Date.now },
+});
 
 // https://mongoosejs.com/docs/models.html
 var userModel = mongoose.model("users", userSchema);
 var otpModel = mongoose.model("otps", otpSchema);
-// var tweetModel = mongoose.model("tweets", tweetSchema);
+var tweetModel = mongoose.model("tweets", tweetSchema);
 
 module.exports = {
   userModel: userModel,
   otpModel: otpModel,
-  // tweetModel: tweetModel,
+  tweetModel: tweetModel,
   // otherModels: OtherModels
 };

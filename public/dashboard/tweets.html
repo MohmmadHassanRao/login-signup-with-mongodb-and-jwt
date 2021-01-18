@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
+    <script src="../socket.io.js"></script>
     <title>Tweets</title>
   </head>
 
@@ -16,6 +16,10 @@
     <h3>Your Name: <span id="currentUserName"></span></h3>
     <h3>Your Email: <span id="currentUserEmail"></span></h3>
     <h1>Post Tweets</h1>
+    <div>
+      <input type="text" id="tweet" />
+      <button onclick="return postTweet()">post</button>
+    </div>
     <div class="tweetContainer">
       <div id="userTweets">
         <h2>Your Tweets</h2>

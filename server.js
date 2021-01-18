@@ -14,6 +14,8 @@ const { resolveSoa } = require("dns");
 var app = express();
 const server = http.createServer(app);
 console.log("tweets==>", tweetModel);
+const socketIo = require("socket.io");
+const io = socketIo(server);
 // console.log("userModel==>", userModel);
 // console.log("server secret==>>", SERVER_SECRET);
 
@@ -27,33 +29,6 @@ app.use(
   })
 );
 app.use(morgan("dev"));
-
-app.post("/tweets", (req, res) => {
-  if (!req.body.tweet || !req.body.email) {
-    res.status(403).send(`
-              please send tweet in json body.
-              e.g:
-              {
-                email:"hassan@gmail.com"
-                  tweet:'Something'
-              }`);
-    return;
-  }
-
-  userModel.findOneAndUpdate(
-    { email: req.body.email },
-    { $push: { tweets: { tweet: req.body.tweet } } },
-    function (err, data) {
-      if (!err) {
-        // userModel.tweets.push({ tweet: req.body.tweet });
-        console.log(data);
-        res.send(data);
-      } else {
-        res.status(500).send(JSON.stringify(err));
-      }
-    }
-  );
-});
 
 // from routes
 app.use("/auth", authRoutes);
@@ -122,17 +97,74 @@ app.get("/userData", (req, res, next) => {
     }
   );
 });
-app.get("/allTweets", (req, res) => {
-  userModel.find((err, data) => {
+
+app.post("/postTweet", (req, res) => {
+  console.log(req.body);
+  if (!req.body.tweet || !req.body.email) {
+    res.status(403).send(`
+              please send tweet in json body.
+              e.g:
+              {
+                email:"hassan@gmail.com"
+                  tweet:'Something'
+              }`);
+    return;
+  }
+
+  // userModel.findOneAndUpdate(
+  //   { email: req.body.email },
+  //   { $push: { tweets: { tweet: req.body.tweet } } },
+  //   function (err, data) {
+  //     if (!err) {
+  //       // userModel.tweets.push({ tweet: req.body.tweet });
+  //       console.log(data);
+  //       res.send(data);
+  //     } else {
+  //       res.status(500).send(JSON.stringify(err));
+  //     }
+  //   }
+  // );
+  userModel.findById(req.body.jToken.id, "name email", (err, user) => {
     if (!err) {
-      console.log(data);
-      res.send(data);
+      console.log("tweet user", user);
+      tweetModel
+        .create({
+          email: req.body.email,
+          name: user.name,
+          tweet: req.body.tweet,
+        })
+        .then((data) => {
+          console.log("tweet posted", data);
+          res.send({
+            message: "tweet posted",
+            name: user.name,
+            email: user.email,
+          });
+          io.emit("NEW_TWEET", data);
+        })
+        .catch((err) => res.status(500).send("an error occurred" + err));
     } else {
-      res.status(500).send("db erro");
+      res.status(500).send("db error");
     }
   });
 });
+// app.get("/userTweets", (req, res) => {
+//   console.log("my tweets user", req.body);
+//   tweetModel.find({ email: req.body.jToken.email }, (err, data) => {
+//     if (!err) {
+//       console.log("tweet Data==>", data);
+//       res.send({
+//         tweets: data,
+//       });
+//     }else{
+//       console.log("error: ",err);
+//       res.status(500).send({
+
+//       })
+//     }
+//   });
+// });
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log("server is running on: ", PORT);
 });

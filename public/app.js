@@ -1,5 +1,7 @@
-// const url = "http://localhost:5000";
-const url = "https://login-signup-jwt.herokuapp.com";
+const url = "http://localhost:5000";
+// const url = "https://login-signup-jwt.herokuapp.com";
+const socket = io(url);
+socket.on;
 
 const signup = () => {
   let userName = document.getElementById("name").value;
@@ -69,7 +71,7 @@ const getData = () => {
       currentUserName.innerHTML = res.data.userData.name;
       currentUserEmail.innerHTML = res.data.userData.email;
       let tweets = res.data.userData.tweets;
-      // console.log(tweets);
+      sessionStorage.setItem("userEmail", res.data.userData.email);
       if (tweets === false) {
         console.log("no tweets");
         let noTweet = document.createElement("div");
@@ -90,28 +92,56 @@ const getData = () => {
     .catch((err) => console.log("error=>", err));
 };
 
-const getAllTweets = () => {
+// const getAllTweets = () => {
+//   axios({
+//     method: "get",
+//     url: url + "/allTweets",
+//   })
+//     .then((res) => {
+//       console.log("all tweets ==>", res.data);
+//       // let allUserTweets = res.data;
+//       // console.log("all users=>", allUserTweets);
+//       // for (let i = 0; i < allUserTweets.length; i++) {
+//       //   // console.log(allUserTweets[i].tweets);
+
+//       //   for (let j = 0; j < allUserTweets[i].tweets.length; j++) {
+//       //     let allTweets = document.createElement("div");
+//       //     allTweets.innerHTML = `<h3>${allUserTweets[i].name}<br /><span class="tweet">${allUserTweets[i].tweets[j].tweet}</span></h3>`;
+//       //     document.getElementById("allTweets").appendChild(allTweets);
+//       //     // console.log(allUserTweets[i].tweets[j]);
+//       //   }
+//       // }
+//     })
+//     .catch((err) => console.log("error==>", err));
+// };
+
+const postTweet = () => {
+  // get user email with session storage
+  var email = sessionStorage.getItem("userEmail");
+  var userTweet = document.getElementById("tweet").value;
+  console.log(userTweet);
   axios({
-    method: "get",
-    url: url + "/allTweets",
+    method: "post",
+    url: url + "/postTweet",
+    data: {
+      email: email,
+      tweet: userTweet,
+    },
   })
     .then((res) => {
-      console.log("all tweets ==>", res.data);
-      let allUserTweets = res.data;
-      console.log("all users=>", allUserTweets);
-      for (let i = 0; i < allUserTweets.length; i++) {
-        // console.log(allUserTweets[i].tweets);
-
-        for (let j = 0; j < allUserTweets[i].tweets.length; j++) {
-          let allTweets = document.createElement("div");
-          allTweets.innerHTML = `<h3>${allUserTweets[i].name}<br /><span class="tweet">${allUserTweets[i].tweets[j].tweet}</span></h3>`;
-          document.getElementById("allTweets").appendChild(allTweets);
-          // console.log(allUserTweets[i].tweets[j]);
-        }
-      }
+      console.log(res);
     })
-    .catch((err) => console.log("error==>", err));
+    .catch((err) => console.log(err));
+  document.getElementById("tweet").value = "";
+  return false;
 };
+
+socket.on("NEW_TWEET", (newTweet) => {
+  let allTweets = document.createElement("div");
+  allTweets.innerHTML = `<h3>${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3>`;
+  document.getElementById("allTweets").appendChild(allTweets);
+  console.log(newTweet.tweet);
+});
 
 const forgotPassword = () => {
   let email = document.getElementById("forgetPassword").value;
