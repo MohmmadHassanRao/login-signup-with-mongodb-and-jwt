@@ -15,14 +15,37 @@ body {
 .tweetContainer > div {
   margin: 20px;
 }
-#allTweets h2 {
+.action {
   cursor: pointer;
-  border: 1px solid whitesmoke;
-  padding: 10px;
+  border: 2px solid whitesmoke;
+  padding: 10px 20px;
+  color: #ffffff;
   border-radius: 10px;
+  font-family: "poppins";
+  font-weight: bold;
+  font-size: 1.3em;
+  background: none;
   margin: 10px 0 2px 2px;
 }
+
 .tweet {
   font-size: 0.9em;
   color: #c1b5ec;
+}
+
+input[type="text"] {
+  background: none;
+  border: 1px solid #ffffff;
+  padding: 5px;
+  color: #fff;
+  border-radius: 5px;
+}
+
+.postBtn {
+  border: 1px solid #ffffff;
+  background: none;
+  border-radius: 5px;
+  color: white;
+  padding: 5px 15px;
+  font-weight: bold;
 }

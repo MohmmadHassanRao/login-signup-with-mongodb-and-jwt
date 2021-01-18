@@ -10,7 +10,6 @@ const cookieParser = require("cookie-parser");
 const { SERVER_SECRET } = require("./core/");
 const authRoutes = require("./routes/auth");
 var { userModel, tweetModel } = require("./dbrepo/models");
-const { resolveSoa } = require("dns");
 var app = express();
 const server = http.createServer(app);
 console.log("tweets==>", tweetModel);
@@ -81,12 +80,7 @@ app.get("/userData", (req, res, next) => {
     function (err, data) {
       if (!err) {
         res.send({
-          userData: {
-            id: data._id,
-            name: data.name,
-            email: data.email,
-            tweets: data.tweets,
-          },
+          userData: data,
           // userData: data,
         });
       } else {
@@ -148,22 +142,35 @@ app.post("/postTweet", (req, res) => {
     }
   });
 });
-// app.get("/userTweets", (req, res) => {
-//   console.log("my tweets user", req.body);
-//   tweetModel.find({ email: req.body.jToken.email }, (err, data) => {
-//     if (!err) {
-//       console.log("tweet Data==>", data);
-//       res.send({
-//         tweets: data,
-//       });
-//     }else{
-//       console.log("error: ",err);
-//       res.status(500).send({
-
-//       })
-//     }
-//   });
-// });
+app.get("/userTweets", (req, res) => {
+  console.log("my tweets user", req.body);
+  tweetModel.find({ email: req.body.jToken.email }, (err, data) => {
+    if (!err) {
+      console.log("tweet Data==>", data);
+      res.send({
+        tweets: data,
+      });
+    } else {
+      console.log("error: ", err);
+      res.status(500).send({});
+    }
+  });
+});
+app.get("/getAllTweets", (req, res) => {
+  console.log(req.body);
+  tweetModel.find((err, data) => {
+    if (!err) {
+      console.log(data.tweet);
+      res.send({
+        tweets: data,
+      });
+    } else {
+      res.status(500).send({
+        message: "db error" + err,
+      });
+    }
+  });
+});
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log("server is running on: ", PORT);

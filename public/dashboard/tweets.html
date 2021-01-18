@@ -18,15 +18,16 @@
     <h1>Post Tweets</h1>
     <div>
       <input type="text" id="tweet" />
-      <button onclick="return postTweet()">post</button>
+      <button class="postBtn" onclick="return postTweet()">Tweet</button>
     </div>
     <div class="tweetContainer">
-      <div id="userTweets">
-        <h2>Your Tweets</h2>
-        <h3 id="noTweets"></h3>
+      <div>
+        <button class="action" onclick="userTweets()">Your Tweets</button>
+        <div id="userTweets"></div>
       </div>
-      <div id="allTweets">
-        <h2 onclick="getAllTweets()">All Tweets</h2>
+      <div>
+        <button class="action" onclick="getAllTweets()">All Tweets</button>
+        <div id="allTweets"></div>
       </div>
     </div>
     <script src="../app.js"></script>
