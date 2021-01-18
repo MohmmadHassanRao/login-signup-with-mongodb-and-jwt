@@ -63,20 +63,20 @@ const getData = () => {
     url: `${url}/userData`,
   })
     .then((res) => {
-      console.log("current user data", res);
+      // console.log("current user data", res);
       welcomeUser.innerHTML = res.data.userData.name;
       currentUserId.innerHTML = res.data.userData.id;
       currentUserName.innerHTML = res.data.userData.name;
       currentUserEmail.innerHTML = res.data.userData.email;
       let tweets = res.data.userData.tweets;
-      console.log(tweets);
+      // console.log(tweets);
       if (tweets === false) {
         console.log("no tweets");
         let noTweet = document.createElement("div");
         noTweet.innerHTML = `<h2>you have not posted any tweet yet</h2>`;
         document.getElementById("userTweets").appendChild(noTweet);
       } else {
-        console.log("tweets");
+        // console.log("tweets");
         for (let i = 0; i < tweets.length; i++) {
           // console.log(res.data.userData.tweets[i]);
           let eachTweet = document.createElement("div");
@@ -100,13 +100,13 @@ const getAllTweets = () => {
       let allUserTweets = res.data;
       console.log("all users=>", allUserTweets);
       for (let i = 0; i < allUserTweets.length; i++) {
-        console.log(allUserTweets[i].tweets);
+        // console.log(allUserTweets[i].tweets);
 
         for (let j = 0; j < allUserTweets[i].tweets.length; j++) {
           let allTweets = document.createElement("div");
           allTweets.innerHTML = `<h3>${allUserTweets[i].name}<br /><span class="tweet">${allUserTweets[i].tweets[j].tweet}</span></h3>`;
           document.getElementById("allTweets").appendChild(allTweets);
-          console.log(allUserTweets[i].tweets[j]);
+          // console.log(allUserTweets[i].tweets[j]);
         }
       }
     })
