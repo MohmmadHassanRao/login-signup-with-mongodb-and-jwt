@@ -34,7 +34,7 @@ const signup = () => {
 const login = () => {
   let currentEmail = document.getElementById("currentEmail").value;
   let currentPassword = document.getElementById("currentPassword").value;
-  console.log(currentEmail, currentPassword);
+  // console.log(currentEmail, currentPassword);
 
   axios({
     method: "post",
@@ -116,7 +116,7 @@ const userTweets = () => {
     url: url + "/userTweets",
   })
     .then((res) => {
-      console.log("all tweets ==>", res.data.tweets);
+      // console.log("all tweets ==>", res.data.tweets);
       let userTweet = res.data.tweets;
       for (let i = 0; i < userTweet.length; i++) {
         let eachCurrentUserTweet = document.createElement("div");
@@ -139,7 +139,7 @@ const getAllTweets = () => {
     url: url + "/getAllTweets",
   })
     .then((res) => {
-      console.log(res.data.tweets);
+      // console.log(res.data.tweets);
       let allTweets = res.data.tweets;
       for (let i = 0; i < allTweets.length; i++) {
         let allUsersTweets = document.createElement("div");
