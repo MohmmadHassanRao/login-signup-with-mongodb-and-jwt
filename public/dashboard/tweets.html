@@ -7,6 +7,11 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="../socket.io.js"></script>
     <title>Tweets</title>
+    <style>
+      .myClass {
+        transform: rotate(180deg);
+      }
+    </style>
   </head>
 
   <body onload="getData()">
@@ -23,11 +28,11 @@
     <div class="tweetContainer">
       <div>
         <button class="action" onclick="userTweets()">Your Tweets</button>
-        <div id="userTweets"></div>
+        <div id="userTweets" style="transform: rotate(180deg)"></div>
       </div>
-      <div>
+      <div class="reverse">
         <button class="action" onclick="getAllTweets()">All Tweets</button>
-        <div id="allTweets"></div>
+        <div id="allTweets" style="transform: rotate(180deg)"></div>
       </div>
     </div>
     <script src="../app.js"></script>

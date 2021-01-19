@@ -102,8 +102,19 @@ const postTweet = () => {
 socket.on("NEW_TWEET", (newTweet) => {
   console.log(newTweet);
   let eachTweet = document.createElement("div");
+  eachTweet.setAttribute("class", "myClass");
   eachTweet.innerHTML = `<h3>${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3>`;
+  // document.getElementById("userTweets").appendChild(eachTweet);
   document.getElementById("allTweets").appendChild(eachTweet);
+});
+
+socket.on("NEW_TWEET", (newTweet) => {
+  console.log(newTweet);
+  let eachTweet = document.createElement("div");
+  eachTweet.setAttribute("class", "myClass");
+  eachTweet.innerHTML = `<h3>${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3>`;
+  document.getElementById("userTweets").appendChild(eachTweet);
+  // document.getElementById("allTweets").appendChild(eachTweet);
 });
 
 const userTweets = () => {
@@ -120,6 +131,8 @@ const userTweets = () => {
       let userTweet = res.data.tweets;
       for (let i = 0; i < userTweet.length; i++) {
         let eachCurrentUserTweet = document.createElement("div");
+        eachCurrentUserTweet.setAttribute("class", "myClass");
+
         eachCurrentUserTweet.innerHTML = `<h3>${userTweet[i].name}<br /><span class="tweet">${userTweet[i].tweet}</span></h3>`;
         document.getElementById("userTweets").appendChild(eachCurrentUserTweet);
       }
@@ -131,6 +144,7 @@ const getAllTweets = () => {
   document.getElementById("allTweets").innerHTML = "";
   let toggle = document.getElementById("userTweets");
   toggle.style.display = "none";
+
   document.getElementById("allTweets").style.display = "block";
   // toggle.style.display = toggle.style.display != "none" ? "none" : "block";
 
@@ -143,6 +157,8 @@ const getAllTweets = () => {
       let allTweets = res.data.tweets;
       for (let i = 0; i < allTweets.length; i++) {
         let allUsersTweets = document.createElement("div");
+        allUsersTweets.setAttribute("class", "myClass");
+
         allUsersTweets.innerHTML = `<h3>${allTweets[i].name}<br /><span class="tweet">${allTweets[i].tweet}</span></h3>`;
         document.getElementById("allTweets").appendChild(allUsersTweets);
       }
