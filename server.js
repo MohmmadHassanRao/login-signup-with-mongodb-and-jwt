@@ -100,7 +100,7 @@ app.get("/userData", (req, res, next) => {
 
   userModel.findById(
     req.body.jToken.id,
-    "name email profileUrl tweets",
+    "name email profileUrl",
     function (err, data) {
       if (!err) {
         res.send({

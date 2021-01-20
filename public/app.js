@@ -1,5 +1,5 @@
-// const url = "http://localhost:5000";
-const url = "https://login-signup-jwt.herokuapp.com";
+const url = "http://localhost:5000";
+// const url = "https://login-signup-jwt.herokuapp.com";
 var socket = io(url);
 socket.on("connect", () => {
   console.log("connected");
@@ -77,7 +77,7 @@ const getData = () => {
       getAllTweets();
       document.getElementById(
         "img"
-      ).innerHTML = `<img width='150px' src="${res.data.userData.profileUrl}" />`;
+      ).innerHTML = `<img width="150px" src="${res.data.userData.profileUrl}" />`;
     })
 
     // .catch((err) => (location.href = "../login.html"));
