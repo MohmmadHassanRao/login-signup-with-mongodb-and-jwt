@@ -235,6 +235,7 @@ app.post("/upload", upload.any(), (req, res, next) => {
                         if (!err) {
                           res.status(200).send({
                             message: "profile picture updated succesfully",
+                            url: urlData[0],
                           });
                         } else {
                           res.status(500).send({

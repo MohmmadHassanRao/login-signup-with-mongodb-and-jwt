@@ -73,11 +73,15 @@ const getData = () => {
       console.log("profile url is==>", res.data.userData);
       // currentUserName.innerHTML = res.data.userData.name;
       // currentUserEmail.innerHTML = res.data.userData.email;
+      if (!res.data.userData.profileUrl) {
+        document.getElementById("img").innerHTML = "upload profile picture";
+      } else if (res.data.userData.profileUrl) {
+        document.getElementById(
+          "img"
+        ).innerHTML = `<img width="150px" src="${res.data.userData.profileUrl}" />`;
+      }
       sessionStorage.setItem("userEmail", res.data.userData.email);
       getAllTweets();
-      document.getElementById(
-        "img"
-      ).innerHTML = `<img width="150px" src="${res.data.userData.profileUrl}" />`;
     })
 
     // .catch((err) => (location.href = "../login.html"));
