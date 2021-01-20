@@ -15,6 +15,30 @@ const server = http.createServer(app);
 console.log("tweets==>", tweetModel);
 const socketIo = require("socket.io");
 const io = socketIo(server);
+const fs = require("fs");
+const multer = require("multer");
+const storage = multer.diskStorage({
+  // https://www.npmjs.com/package/multer#diskstorage
+  destination: "./uploads/",
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      `${new Date().getTime()}-${file.filename}.${file.mimetype.split("/")[1]}`
+    );
+  },
+});
+var upload = multer({ storage: storage });
+
+var admin = require("firebase-admin");
+
+var serviceAccount = require("./serviceAccount.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://calculator-2a862.firebaseio.com",
+});
+
+const bucket = admin.storage().bucket("gs://calculator-2a862.appspot.com");
 // console.log("userModel==>", userModel);
 // console.log("server secret==>>", SERVER_SECRET);
 
@@ -76,7 +100,7 @@ app.get("/userData", (req, res, next) => {
 
   userModel.findById(
     req.body.jToken.id,
-    "name email tweets",
+    "name email profileUrl tweets",
     function (err, data) {
       if (!err) {
         res.send({
@@ -171,6 +195,105 @@ app.get("/getAllTweets", (req, res) => {
     }
   });
 });
+app.post("/upload", upload.any(), (req, res, next) => {
+  console.log("req.body: ", JSON.parse(req.body.myDetails).email);
+  // console.log("req.email: ", req.body.myDetails);
+  console.log("req.files: ", req.files);
+
+  console.log("uploaded file name: ", req.files[0].originalname);
+  console.log("file type: ", req.files[0].mimetype);
+  console.log("file name in server folders: ", req.files[0].filename);
+  console.log("file path in server folders: ", req.files[0].path);
+
+  bucket.upload(
+    req.files[0].path,
+    // {
+    //     destination: `${new Date().getTime()}-new-image.png`, // give destination name if you want to give a certain name to file in bucket, include date to make name unique otherwise it will replace previous file with the same name
+    // },
+    function (err, file, apiResponse) {
+      if (!err) {
+        // console.log("api resp: ", apiResponse);
+
+        // https://googleapis.dev/nodejs/storage/latest/Bucket.html#getSignedUrl
+        file
+          .getSignedUrl({
+            action: "read",
+            expires: "03-09-2491",
+          })
+          .then((urlData, err) => {
+            if (!err) {
+              console.log("public downloadable url: ", urlData[0]); // this is public downloadable url
+              userModel.findOne(
+                { email: JSON.parse(req.body.myDetails).email },
+                (err, data) => {
+                  if (!err) {
+                    console.log("userFound", data);
+                    data.update(
+                      { profileUrl: urlData[0] },
+                      {},
+                      (err, updatedUrl) => {
+                        if (!err) {
+                          res.status(200).send({
+                            message: "profile picture updated succesfully",
+                          });
+                        } else {
+                          res.status(500).send({
+                            message: "an error occured",
+                          });
+                        }
+                      }
+                    );
+                  } else {
+                    console.log("user not found");
+                  }
+                }
+              );
+
+              // // delete file from folder before sending response back to client (optional but recommended)
+              // // optional because it is gonna delete automatically sooner or later
+              // // recommended because you may run out of space if you dont do so, and if your files are sensitive it is simply not safe in server folder
+              // try {
+              //     fs.unlinkSync(req.files[0].path)
+              //     //file removed
+              // } catch (err) {
+              //     console.error(err)
+              // }
+              // res.send({
+              //   message: "ok",
+              //   url: urlData[0],
+              // });
+            }
+          });
+      } else {
+        console.log("err: ", err);
+        res.status(500).send();
+      }
+    }
+  );
+});
+
+// app.post("/upload", (req, res, next) => {
+//   console.log(req.body);
+
+// userModel.findById(
+//   req.body.jToken.id,
+//   "name email profileUrl",
+//   function (err, data) {
+//     if (!err) {
+//       console.log("data url", data);
+//       res.send({
+//         userData: data,
+//         // userData: data,
+//       });
+//     } else {
+//       res.status(500).send({
+//         message: "server error",
+//       });
+//     }
+//   }
+// );
+// });
+
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log("server is running on: ", PORT);

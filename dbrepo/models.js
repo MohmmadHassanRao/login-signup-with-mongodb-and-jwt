@@ -40,6 +40,7 @@ process.on("SIGINT", function () {
 var userSchema = new mongoose.Schema({
   name: String,
   email: String,
+  profileUrl: String,
   password: String,
   // tweets: [{ tweet: String }],
   createdOn: { type: Date, default: Date.now },

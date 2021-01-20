@@ -15,11 +15,17 @@
   </head>
 
   <body onload="getData()">
-    <h1>Welcome <span id="welcomeUser"></span> to ABC</h1>
-    <h2>Here's your data</h2>
-    <h3>Your ID: <span id="currentUserId"></span></h3>
+    <h1>Welcome <span id="welcomeUser"></span></h1>
+    <!-- <h2>Here's your data</h2> -->
+    <!-- Upload Image -->
+    <form onsubmit="return upload()">
+      <input type="file" id="fileInp" /><br />
+      <input type="submit" value="upload" />
+    </form>
+    <div id="img"></div>
+    <!-- <h3>Your ID: <span id="currentUserId"></span></h3>
     <h3>Your Name: <span id="currentUserName"></span></h3>
-    <h3>Your Email: <span id="currentUserEmail"></span></h3>
+    <h3>Your Email: <span id="currentUserEmail"></span></h3> -->
     <h1>Post Tweets</h1>
     <div>
       <input type="text" id="tweet" />
@@ -36,5 +42,48 @@
       </div>
     </div>
     <script src="../app.js"></script>
+    <script>
+      //   const fs = require("fs");
+      //   const FormData = require("form-data");
+      // const url = "http://localhost:5000";
+
+      function upload() {
+        var fileInp = document.getElementById("fileInp");
+        console.log("fileInp", fileInp);
+        console.log("fileInp", fileInp.files[0]);
+
+        let formData = new FormData();
+
+        formData.append("myFile", fileInp.files[0]);
+        formData.append("myName", "Hassan");
+        formData.append(
+          "myDetails",
+          JSON.stringify({
+            email: sessionStorage.getItem("userEmail"),
+            class: "web",
+          })
+        );
+        axios({
+          method: "post",
+          url: "http://localhost:5000/upload",
+          data: formData,
+          headers: { "Content-Type": "multipart/form-data" },
+        })
+          .then((res) => {
+            console.log("upload success", res.data);
+            console.log("message", res.data.message);
+            console.log("photo url", res.data.url);
+            var img = document.createElement("img");
+            img.setAttribute("src", res.data.url);
+            img.setAttribute("width", "100");
+            img.setAttribute("height", "100");
+            img.setAttribute("alt", "user image");
+            document.getElementById("img").appendChild(img);
+          })
+          .catch((err) => console.log(err));
+
+        return false;
+      }
+    </script>
   </body>
 </html>

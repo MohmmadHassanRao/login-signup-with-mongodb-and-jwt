@@ -58,9 +58,9 @@ const login = () => {
 
 const getData = () => {
   let welcomeUser = document.getElementById("welcomeUser");
-  let currentUserId = document.getElementById("currentUserId");
-  let currentUserName = document.getElementById("currentUserName");
-  let currentUserEmail = document.getElementById("currentUserEmail");
+  // let currentUserId = document.getElementById("currentUserId");
+  // let currentUserName = document.getElementById("currentUserName");
+  // let currentUserEmail = document.getElementById("currentUserEmail");
 
   axios({
     method: "get",
@@ -69,13 +69,19 @@ const getData = () => {
     .then((res) => {
       // console.log("current user data", res);
       welcomeUser.innerHTML = res.data.userData.name;
-      currentUserId.innerHTML = res.data.userData._id;
-      currentUserName.innerHTML = res.data.userData.name;
-      currentUserEmail.innerHTML = res.data.userData.email;
+      // currentUserId.innerHTML = res.data.userData._id;
+      console.log("profile url is==>", res.data.userData);
+      // currentUserName.innerHTML = res.data.userData.name;
+      // currentUserEmail.innerHTML = res.data.userData.email;
       sessionStorage.setItem("userEmail", res.data.userData.email);
       getAllTweets();
+      document.getElementById(
+        "img"
+      ).innerHTML = `<img width='150px' src="${res.data.userData.profileUrl}" />`;
     })
-    .catch((err) => (location.href = "./login.html"));
+
+    // .catch((err) => (location.href = "../login.html"));
+    .catch((err) => err);
 };
 
 const postTweet = () => {
