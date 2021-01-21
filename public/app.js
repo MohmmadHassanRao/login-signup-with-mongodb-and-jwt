@@ -275,7 +275,7 @@ const upload = () => {
 };
 const showProfile = () => {
   document.getElementById("userImg").src = "./shield.png";
-  // document.getElementById("uploadBtn").style.display = "block";
+  document.getElementById("uploadBtn").style.display = "block";
 };
 
 const logout = () => {
