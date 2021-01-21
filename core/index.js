@@ -2,5 +2,5 @@
 
 module.exports = {
   SERVER_SECRET: process.env.SECRET || "1234",
-  POSTMARK_SECRET: process.env.POSTMARK_SECRET || "12345",
+  POSTMARK: process.env.POSTMARK || "12345",
 };

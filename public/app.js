@@ -1,5 +1,5 @@
-// const url = "http://localhost:5000";
-const url = "https://login-signup-jwt.herokuapp.com";
+const url = "http://localhost:5000";
+// const url = "https://login-signup-jwt.herokuapp.com";
 var socket = io(url);
 socket.on("connect", () => {
   console.log("connected");
@@ -20,9 +20,13 @@ const signup = () => {
     },
   })
     .then((res) => {
-      console.log(res.data.message);
-      alert(res.data.message);
-      window.location.href = "login.html";
+      if (res.data.status === 403) {
+        alert(res.data.message);
+      } else {
+        console.log(res.data.message);
+        alert(res.data.message);
+        window.location.href = "login.html";
+      }
     })
     .catch((err) => {
       console.log(err);
@@ -45,9 +49,15 @@ const login = () => {
     },
   })
     .then((res) => {
-      console.log(res.data.message);
-      alert(res.data.message);
-      window.location.href = "./dashboard/tweets.html";
+      if (res.data.status === 401) {
+        alert(res.data.message);
+      } else if (res.data.status === 403) {
+        alert(res.data.message);
+      } else {
+        console.log(res.data.message);
+        alert(res.data.message);
+        window.location.href = "./dashboard/tweets.html";
+      }
     })
     .catch((err) => {
       console.log("error=>", err);
@@ -58,7 +68,7 @@ const login = () => {
 
 const getData = () => {
   let welcomeUser = document.getElementById("welcomeUser");
-  // let currentUserId = document.getElementById("currentUserId");
+  let currentUserId = document.getElementById("currentUserId");
   // let currentUserName = document.getElementById("currentUserName");
   // let currentUserEmail = document.getElementById("currentUserEmail");
 
@@ -69,23 +79,21 @@ const getData = () => {
     .then((res) => {
       // console.log("current user data", res);
       welcomeUser.innerHTML = res.data.userData.name;
+      // console.log("profile url is==>", res.data.userData);
       // currentUserId.innerHTML = res.data.userData._id;
-      console.log("profile url is==>", res.data.userData);
       // currentUserName.innerHTML = res.data.userData.name;
-      // currentUserEmail.innerHTML = res.data.userData.email;
+      currentUserEmail.innerHTML = res.data.userData.email;
       if (!res.data.userData.profileUrl) {
-        document.getElementById("img").innerHTML = "upload profile picture";
+        document.getElementById("userImg").src = "./user.png";
       } else if (res.data.userData.profileUrl) {
-        document.getElementById(
-          "img"
-        ).innerHTML = `<img width="150px" src="${res.data.userData.profileUrl}" />`;
+        document.getElementById("userImg").src = res.data.userData.profileUrl;
       }
       sessionStorage.setItem("userEmail", res.data.userData.email);
       getAllTweets();
     })
 
-    // .catch((err) => (location.href = "../login.html"));
-    .catch((err) => err);
+    .catch((err) => (window.location.href = "../login.html"));
+  // .catch((err) => err);
 };
 
 const postTweet = () => {
@@ -113,7 +121,7 @@ socket.on("NEW_TWEET", (newTweet) => {
   console.log(newTweet);
   let eachTweet = document.createElement("div");
   eachTweet.setAttribute("class", "myClass");
-  eachTweet.innerHTML = `<h3>${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3>`;
+  eachTweet.innerHTML = `<h3 class="tweetCard">${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3>`;
   // document.getElementById("userTweets").appendChild(eachTweet);
   document.getElementById("allTweets").appendChild(eachTweet);
 });
@@ -122,7 +130,7 @@ socket.on("NEW_TWEET", (newTweet) => {
   console.log(newTweet);
   let eachTweet = document.createElement("div");
   eachTweet.setAttribute("class", "myClass");
-  eachTweet.innerHTML = `<h3>${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3>`;
+  eachTweet.innerHTML = `<h3 class="tweetCard">${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3>`;
   document.getElementById("userTweets").appendChild(eachTweet);
   // document.getElementById("allTweets").appendChild(eachTweet);
 });
@@ -143,7 +151,7 @@ const userTweets = () => {
         let eachCurrentUserTweet = document.createElement("div");
         eachCurrentUserTweet.setAttribute("class", "myClass");
 
-        eachCurrentUserTweet.innerHTML = `<h3>${userTweet[i].name}<br /><span class="tweet">${userTweet[i].tweet}</span></h3>`;
+        eachCurrentUserTweet.innerHTML = `<h3 class="tweetCard">${userTweet[i].name}<br /><span class="tweet">${userTweet[i].tweet}</span></h3>`;
         document.getElementById("userTweets").appendChild(eachCurrentUserTweet);
       }
     })
@@ -169,7 +177,7 @@ const getAllTweets = () => {
         let allUsersTweets = document.createElement("div");
         allUsersTweets.setAttribute("class", "myClass");
 
-        allUsersTweets.innerHTML = `<h3>${allTweets[i].name}<br /><span class="tweet">${allTweets[i].tweet}</span></h3>`;
+        allUsersTweets.innerHTML = `<h3 class="tweetCard">${allTweets[i].name}<br /><span class="tweet">${allTweets[i].tweet}</span></h3>`;
         document.getElementById("allTweets").appendChild(allUsersTweets);
       }
     })
@@ -222,4 +230,65 @@ const resetPassword = () => {
     });
 
   return false;
+};
+
+const upload = () => {
+  let fileInp = document.getElementById("fileInp");
+  console.log("fileInp", fileInp);
+  console.log("fileInp", fileInp.files[0]);
+
+  let formData = new FormData();
+
+  formData.append("myFile", fileInp.files[0]);
+  formData.append("myName", "Hassan");
+  formData.append(
+    "myDetails",
+    JSON.stringify({
+      email: sessionStorage.getItem("userEmail"),
+      class: "web",
+    })
+  );
+  axios({
+    method: "post",
+    url: "http://localhost:5000/upload",
+    // url: "https://login-signup-jwt.herokuapp.com/upload",
+    data: formData,
+    headers: { "Content-Type": "multipart/form-data" },
+  })
+    .then((res) => {
+      console.log("upload success", res.data);
+      console.log("message", res.data.message);
+      console.log("photo url", res.data.url);
+      // var img = document.createElement("img");
+      // img.setAttribute("src", res.data.url);
+      // img.setAttribute("width", "100");
+      // img.setAttribute("height", "100");
+      // img.setAttribute("alt", "user image");
+      // document.getElementById("img").appendChild(img);
+      document.getElementById("userImg").src = res.data.url;
+      // document.getElementById("fileInput").style.display = "none";
+      document.getElementById("uploadBtn").style.display = "none";
+    })
+    .catch((err) => console.log(err));
+
+  return false;
+};
+const showProfile = () => {
+  document.getElementById("userImg").src = "./shield.png";
+  document.getElementById("uploadBtn").style.display = "block";
+};
+
+const logout = () => {
+  axios({
+    method: "post",
+    url: url + "/auth/logout",
+  })
+    .then((res) => {
+      alert(res.data);
+      sessionStorage.removeItem("userEmail");
+      window.location.href = "../login.html";
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };

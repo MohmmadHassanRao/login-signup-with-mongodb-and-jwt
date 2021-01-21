@@ -12,7 +12,6 @@ const authRoutes = require("./routes/auth");
 var { userModel, tweetModel } = require("./dbrepo/models");
 var app = express();
 const server = http.createServer(app);
-console.log("tweets==>", tweetModel);
 const socketIo = require("socket.io");
 const io = socketIo(server);
 const fs = require("fs");
@@ -272,28 +271,6 @@ app.post("/upload", upload.any(), (req, res, next) => {
     }
   );
 });
-
-// app.post("/upload", (req, res, next) => {
-//   console.log(req.body);
-
-// userModel.findById(
-//   req.body.jToken.id,
-//   "name email profileUrl",
-//   function (err, data) {
-//     if (!err) {
-//       console.log("data url", data);
-//       res.send({
-//         userData: data,
-//         // userData: data,
-//       });
-//     } else {
-//       res.status(500).send({
-//         message: "server error",
-//       });
-//     }
-//   }
-// );
-// });
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {

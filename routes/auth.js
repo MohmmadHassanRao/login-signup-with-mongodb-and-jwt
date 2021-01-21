@@ -3,14 +3,12 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt-inzi");
 const { userModel, otpModel } = require("../dbrepo/models");
 const api = express.Router();
-const { SERVER_SECRET } = require("../core/");
+const { SERVER_SECRET, POSTMARK } = require("../core/");
 const postMark = require("postmark");
-const client = new postMark.Client("d11001a3-e06d-4260-b243-bb09ae367935");
+const client = new postMark.Client(POSTMARK);
 // const client = process.env.POSTMARK;
 
-console.log("userModel=>", userModel);
-console.log("server Secret=>", SERVER_SECRET);
-
+console.log(POSTMARK);
 // Signup
 api.post("/signup", (req, res, next) => {
   // for postman
@@ -55,7 +53,8 @@ api.post("/signup", (req, res, next) => {
         message: "db error",
       });
     } else {
-      res.status(403).send({
+      res.send({
+        status: 403,
         message: "user already exist",
       });
     }
@@ -111,7 +110,8 @@ api.post("/login", (req, res, next) => {
             });
           } else {
             console.log("not matched");
-            res.status(401).send({
+            res.send({
+              status: 401,
               message: "incorrect password",
             });
           }
@@ -120,7 +120,8 @@ api.post("/login", (req, res, next) => {
           console.log("error: ", e);
         });
     } else {
-      res.status(403).send({
+      res.send({
+        status: 403,
         message: "user not found",
       });
     }
@@ -132,7 +133,7 @@ api.post("/logout", (req, res, next) => {
     maxAge: 86_400_000,
     httpOnly: true,
   });
-  res.send("logout success");
+  res.send("logout successfully");
 });
 
 api.post("/forget-password", (req, res, next) => {

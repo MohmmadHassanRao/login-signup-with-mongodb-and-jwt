@@ -20,7 +20,7 @@
 }
 
 body {
-  background: linear-gradient(147deg, #8c54e9 0%, #4b76e7 74%);
+  background: linear-gradient(147deg, #43c6ac 0%, #191654 74%);
   min-height: 100vh;
   width: 100%;
 }
@@ -59,7 +59,7 @@ body {
 #cart-section .container .row .cart {
   width: 310px;
   height: 550px;
-  background-color: #210f4d;
+  background-color: #223e68;
   margin: 10px;
   overflow: hidden;
   position: relative;
@@ -75,7 +75,7 @@ body {
   content: " ";
   height: 50px;
   width: 50px;
-  background-image: linear-gradient(220deg, #3e27ed 50%, #703dd0 80%);
+  background-image: linear-gradient(220deg, #191654 50%, #43c6ac 80%);
   position: absolute;
   border-radius: 100px;
 }
@@ -169,7 +169,7 @@ body {
   border-radius: 100px;
   font-size: 20px;
   font-family: "poppins";
-  background: linear-gradient(100deg, #3e27ed 50%, #703dd0 80%);
+  background: linear-gradient(100deg, #191654 50%, #43c6ac 80%);
   border: none;
   color: white;
   cursor: pointer;
@@ -181,7 +181,7 @@ body {
 }
 
 #cart-section .container .row .cart3 .button-area .account-area a {
-  color: #703dd0;
+  color: #43c6ac;
   text-decoration: none;
 }
 

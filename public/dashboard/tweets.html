@@ -15,78 +15,43 @@
   </head>
 
   <body onload="getData()">
-    <h1>Welcome <span id="welcomeUser"></span></h1>
-    <!-- <h2>Here's your data</h2> -->
-    <!-- Upload Image -->
-    <form onsubmit="return upload()">
-      <input type="file" id="fileInp" /><br />
-      <input type="submit" value="upload" />
-    </form>
-    <div id="img"></div>
-    <!-- <h3>Your ID: <span id="currentUserId"></span></h3>
-    <h3>Your Name: <span id="currentUserName"></span></h3>
-    <h3>Your Email: <span id="currentUserEmail"></span></h3> -->
-    <h1>Post Tweets</h1>
-    <div>
-      <input type="text" id="tweet" />
-      <button class="postBtn" onclick="return postTweet()">Tweet</button>
+    <!-- NAVBAR -->
+    <div class="nav">
+      <h1 class="logo">Twitter</h1>
+      <button class="logOutBtn" onclick="logout()">Logout</button>
     </div>
-    <div class="tweetContainer">
+    <!-- USER BIO -->
+    <div class="userBio">
+      <h3>Welcome <span id="welcomeUser"></span><br /></h3>
+      <small class="email"> <span id="currentUserEmail"></span></small>
+      <!-- Upload Image -->
+      <form onsubmit="return upload()" class="image-upload">
+        <input type="file" id="fileInp" onchange="showProfile()" /><br />
+        <input type="submit" value="upload" id="uploadBtn" />
+        <label for="fileInp">
+          <img alt="profile image" id="userImg" width="150px" />
+        </label>
+      </form>
+    </div>
+    <!-- Post tweet section -->
+    <div class="postTweet">
+      <h1>Post Tweets</h1>
       <div>
-        <button class="action" onclick="userTweets()">Your Tweets</button>
-        <div id="userTweets" style="transform: rotate(180deg)"></div>
+        <form onsubmit="return postTweet()">
+          <input type="text" id="tweet" />
+          <button class="postBtn">Tweet</button>
+        </form>
       </div>
-      <div class="reverse">
-        <button class="action" onclick="getAllTweets()">All Tweets</button>
+      <div class="tweetContainer">
+        <div>
+          <button class="action" onclick="userTweets()">Your Tweets</button>
+          <button class="action" onclick="getAllTweets()">All Tweets</button>
+        </div>
+
+        <div id="userTweets" style="transform: rotate(180deg)"></div>
         <div id="allTweets" style="transform: rotate(180deg)"></div>
       </div>
     </div>
     <script src="../app.js"></script>
-    <script>
-      //   const fs = require("fs");
-      //   const FormData = require("form-data");
-      // const url = "http://localhost:5000";
-
-      function upload() {
-        var fileInp = document.getElementById("fileInp");
-        console.log("fileInp", fileInp);
-        console.log("fileInp", fileInp.files[0]);
-
-        let formData = new FormData();
-
-        formData.append("myFile", fileInp.files[0]);
-        formData.append("myName", "Hassan");
-        formData.append(
-          "myDetails",
-          JSON.stringify({
-            email: sessionStorage.getItem("userEmail"),
-            class: "web",
-          })
-        );
-        axios({
-          method: "post",
-          url: "https://login-signup-jwt.herokuapp.com/upload",
-          data: formData,
-          headers: { "Content-Type": "multipart/form-data" },
-        })
-          .then((res) => {
-            console.log("upload success", res.data);
-            console.log("message", res.data.message);
-            console.log("photo url", res.data.url);
-            // var img = document.createElement("img");
-            // img.setAttribute("src", res.data.url);
-            // img.setAttribute("width", "100");
-            // img.setAttribute("height", "100");
-            // img.setAttribute("alt", "user image");
-            // document.getElementById("img").appendChild(img);
-            document.getElementById(
-              "img"
-            ).innerHTML = `<img width="150px" src="${res.data.url}" />`;
-          })
-          .catch((err) => console.log(err));
-
-        return false;
-      }
-    </script>
   </body>
 </html>
