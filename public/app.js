@@ -250,7 +250,7 @@ const upload = () => {
   );
   axios({
     method: "post",
-    url: "http://localhost:5000/upload",
+    url: url + "/upload",
     // url: "https://login-signup-jwt.herokuapp.com/upload",
     data: formData,
     headers: { "Content-Type": "multipart/form-data" },
