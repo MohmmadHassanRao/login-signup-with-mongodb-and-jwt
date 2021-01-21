@@ -22,21 +22,21 @@
     </div>
     <!-- USER BIO -->
     <div class="userBio">
-      <h3>Welcome <span id="welcomeUser"></span><br /></h3>
+      <h5>Welcome <span id="welcomeUser"></span><br /></h5>
       <small class="email"> <span id="currentUserEmail"></span></small>
       <!-- Upload Image -->
       <form onsubmit="return upload()" class="image-upload">
         <input type="file" id="fileInp" onchange="showProfile()" /><br />
-        <button id="uploadBtn" class="uBtn">upload</button>
+        <input type="submit" value="upload" id="uploadBtn" class="uBtn" />
         <label for="fileInp">
-          <img alt="profile image" id="userImg" width="150px" />
+          <img alt="profile image" id="userImg" width="120px" />
         </label>
       </form>
     </div>
     <!-- Post tweet section -->
-    <div class="postTweet">
-      <h1>Post Tweets</h1>
-      <div>
+    <div>
+      <div class="postTweet">
+        <h1>Post Tweets</h1>
         <form onsubmit="return postTweet()">
           <input type="text" id="tweet" />
           <button class="postBtn">Tweet</button>
