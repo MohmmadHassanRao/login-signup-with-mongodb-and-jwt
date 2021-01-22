@@ -141,7 +141,7 @@ app.post("/postTweet", (req, res) => {
   //     }
   //   }
   // );
-  userModel.findById(req.body.jToken.id, "name email", (err, user) => {
+  userModel.findById(req.body.jToken.id, "name email profileUrl", (err, user) => {
     if (!err) {
       console.log("tweet user", user);
       tweetModel
@@ -149,6 +149,7 @@ app.post("/postTweet", (req, res) => {
           email: req.body.email,
           name: user.name,
           tweet: req.body.tweet,
+          profileUrl: user.profileUrl
         })
         .then((data) => {
           console.log("tweet posted", data);
@@ -156,6 +157,7 @@ app.post("/postTweet", (req, res) => {
             message: "tweet posted",
             name: user.name,
             email: user.email,
+            profileUrl:user.profileUrl
           });
           io.emit("NEW_TWEET", data);
         })
@@ -195,7 +197,8 @@ app.get("/getAllTweets", (req, res) => {
   });
 });
 app.post("/upload", upload.any(), (req, res, next) => {
-  console.log("req.body: ", JSON.parse(req.body.myDetails).email);
+  console.log("req.body: ", JSON.parse(req.body.myDetails));
+  let userEmail = JSON.parse(req.body.myDetails)
   // console.log("req.email: ", req.body.myDetails);
   console.log("req.files: ", req.files);
 
@@ -223,29 +226,37 @@ app.post("/upload", upload.any(), (req, res, next) => {
             if (!err) {
               console.log("public downloadable url: ", urlData[0]); // this is public downloadable url
               userModel.findOne(
-                { email: JSON.parse(req.body.myDetails).email },
+                { email: userEmail.email },
                 (err, data) => {
                   if (!err) {
                     console.log("userFound", data);
-                    data.update(
-                      { profileUrl: urlData[0] },
-                      {},
-                      (err, updatedUrl) => {
-                        if (!err) {
-                          res.status(200).send({
-                            message: "profile picture updated succesfully",
-                            url: urlData[0],
-                          });
-                        } else {
-                          res.status(500).send({
-                            message: "an error occured",
-                          });
-                        }
+                    tweetModel.updateMany({email:userEmail.email},{profileUrl:urlData[0]},(err,tweet)=>{
+                      if(!err){
+                        console.log("tweet model updated");
                       }
-                    );
+                    })
                   } else {
                     console.log("user not found");
                   }
+                  data.update(
+                    { profileUrl: urlData[0] },
+                    
+                    (err, updatedUrl) => {
+                      if (!err) {
+                        res.status(200).send({
+                          message: "profile picture updated succesfully",
+                          url: urlData[0],
+                        });
+                      } else {
+                        res.status(500).send({
+                          message: "an error occured",
+                        });
+                      }
+                    }
+                  );
+                  
+                  
+                  
                 }
               );
 

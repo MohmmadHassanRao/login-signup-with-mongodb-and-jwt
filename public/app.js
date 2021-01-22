@@ -1,5 +1,5 @@
-// const url = "http://localhost:5000";
-const url = "https://login-signup-jwt.herokuapp.com";
+const url = "http://localhost:5000";
+// const url = "https://login-signup-jwt.herokuapp.com";
 var socket = io(url);
 socket.on("connect", () => {
   console.log("connected");
@@ -87,8 +87,10 @@ const getData = () => {
         document.getElementById("userImg").src = "./user.png";
       } else if (res.data.userData.profileUrl) {
         document.getElementById("userImg").src = res.data.userData.profileUrl;
+        // document.getElementById("tweetImage").src = res.data.userData.profileUrl;
       }
       sessionStorage.setItem("userEmail", res.data.userData.email);
+      sessionStorage.setItem("profileUrl", res.data.userData.profileUrl);
       getAllTweets();
     })
 
@@ -121,7 +123,7 @@ socket.on("NEW_TWEET", (newTweet) => {
   console.log(newTweet);
   let eachTweet = document.createElement("div");
   eachTweet.setAttribute("class", "myClass");
-  eachTweet.innerHTML = `<h3 class="tweetCard">${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3>`;
+  eachTweet.innerHTML = `<div class="onTweet"><img src="${newTweet.profileUrl}"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3></div>`;
   // document.getElementById("userTweets").appendChild(eachTweet);
   document.getElementById("allTweets").appendChild(eachTweet);
 });
@@ -130,7 +132,7 @@ socket.on("NEW_TWEET", (newTweet) => {
   console.log(newTweet);
   let eachTweet = document.createElement("div");
   eachTweet.setAttribute("class", "myClass");
-  eachTweet.innerHTML = `<h3 class="tweetCard">${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3>`;
+  eachTweet.innerHTML = `<div class="onTweet"><img src="${newTweet.profileUrl}"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3></div>`;
   document.getElementById("userTweets").appendChild(eachTweet);
   // document.getElementById("allTweets").appendChild(eachTweet);
 });
@@ -151,7 +153,7 @@ const userTweets = () => {
         let eachCurrentUserTweet = document.createElement("div");
         eachCurrentUserTweet.setAttribute("class", "myClass");
 
-        eachCurrentUserTweet.innerHTML = `<h3 class="tweetCard">${userTweet[i].name}<br /><span class="tweet">${userTweet[i].tweet}</span></h3>`;
+        eachTweet.innerHTML = `<div class="onTweet"><img src="${newTweet.profileUrl}"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3></div>`;
         document.getElementById("userTweets").appendChild(eachCurrentUserTweet);
       }
     })
@@ -172,12 +174,13 @@ const getAllTweets = () => {
   })
     .then((res) => {
       // console.log(res.data.tweets);
+      console.log(res);
       let allTweets = res.data.tweets;
       for (let i = 0; i < allTweets.length; i++) {
         let allUsersTweets = document.createElement("div");
         allUsersTweets.setAttribute("class", "myClass");
 
-        allUsersTweets.innerHTML = `<h3 class="tweetCard">${allTweets[i].name}<br /><span class="tweet">${allTweets[i].tweet}</span></h3>`;
+        allUsersTweets.innerHTML =`<div class="onTweet"><img src="${allTweets[i].profileUrl}" id="tweetImage" class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${allTweets[i].name} <span class="tweet">${allTweets[i].email}</span><br /><span class="tweet">${allTweets[i].tweet}</span></h3></div>`;
         document.getElementById("allTweets").appendChild(allUsersTweets);
       }
     })
@@ -275,6 +278,7 @@ const upload = () => {
 };
 const showProfile = () => {
   document.getElementById("userImg").src = "./shield.png";
+  document.getElementById("tweetImage").src = "./shield.png";
   document.getElementById("uploadBtn").style.display = "block";
 };
 

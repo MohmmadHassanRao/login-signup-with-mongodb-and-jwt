@@ -117,16 +117,33 @@ input[type="text"] {
   width: 17%;
 }
 .tweetCard {
+  margin: 0 5px;
   border-radius: 5px;
-  word-wrap: break-word;
-  width: 30%;
+  width: 70%;
+  height: 20%;
+  word-wrap:break-word
+  
+}
+.onTweet{
+  display: flex;
+ width: 50%;
+ padding: 0 10px;
+ margin: 0 auto ;
+  text-align: center;
+  border-top: 1px solid white;
+}
+.onTweet>img{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-top: 20px;
+  
 }
 #allTweets h3 {
   display: inline-block;
   text-align: left;
   padding: 20px;
-  -webkit-box-shadow: -6px 7px 22px -2px rgba(0, 0, 0, 0.22);
-  box-shadow: -6px 7px 22px -2px rgba(0, 0, 0, 0.22);
+  
 }
 #userTweets h3 {
   display: inline-block;
@@ -134,4 +151,12 @@ input[type="text"] {
   padding: 20px;
   -webkit-box-shadow: -6px 7px 22px -2px rgba(0, 0, 0, 0.22);
   box-shadow: -6px 7px 22px -2px rgba(0, 0, 0, 0.22);
+}
+/* .tweetImg{
+  width: 50px;
+  border-radius: 50%;
+} */
+.profileImage{
+  width: 150px;
+  height: 150px;
 }
