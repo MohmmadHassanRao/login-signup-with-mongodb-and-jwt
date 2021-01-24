@@ -1,30 +1,72 @@
 @import url("https://fonts.googleapis.com/css?family=Playfair+Display:400,900|Poppins:400,500");
 
 body {
-  background: linear-gradient(300deg, #43c6ac 0%, #191654 190%);
+  background: #15202b;
+  /* background: linear-gradient(300deg, #43c6ac 0%, #191654 190%); */
   min-height: 100vh;
   width: 100%;
   color: white;
   font-family: "poppins";
-  overflow-x: hidden;
   text-align: center;
   margin: 0;
 }
-
-.tweetContainer > div {
-  margin: 20px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
+.leftside {
+  height: 100vh;
+  border-right: 1px solid gray;
+  position: fixed;
+  width: 230px;
+  background-color: #15202b;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+  padding: 20px;
+}
+.leftside p {
+  color: rgb(240, 240, 240);
+  font-weight: lighter;
+  margin-top: -10px;
+  font-size: 0.6em;
+}
+.rightside {
+  position: relative;
+  left: 150px;
+  /* border: 1px solid #fff; */
+}
+.fa-image {
+  margin-top: 5px;
+  cursor: pointer;
+}
+
 .action {
   cursor: pointer;
-  border: 2px solid whitesmoke;
-  padding: 10px 20px;
   color: #ffffff;
-  border-radius: 10px;
-  font-family: "poppins";
-  font-weight: bold;
-  font-size: 1.3em;
+  border: none;
   background: none;
-  margin: 10px 0 2px 2px;
+  width: 100px;
+  margin-top: 20px;
+  text-align: left;
+  padding: 5px 10px;
+  font-weight: bold;
+}
+.action:hover {
+  border-radius: 10%;
+  color: #52a2f3;
+  background-color: #192d40;
+}
+.action i {
+  margin-right: 10px;
+}
+.postTweet {
+  margin: 0 auto;
+  border: 1px solid gray;
+  height: 120px;
+  width: 500px;
 }
 
 .tweet {
@@ -46,40 +88,39 @@ input[type="text"] {
   background: none;
   border-radius: 5px;
   color: white;
-  padding: 5px 15px;
+  padding: 10px;
   font-weight: bold;
 }
 /* .reverse {
   transform: rotate(180deg);
 } */
 .logOutBtn {
-  border: 1px solid #ffffff;
   background: none;
-  border-radius: 5px;
-  color: white;
-  font-weight: bold;
-  position: absolute;
-  padding: 10px;
-  top: 20px;
-  right: 10px;
-}
-.uBtn {
-  border: 1px solid #ffffff;
-  background: none;
-  border-radius: 5px;
-  color: white;
-  padding: 5px 15px;
-  font-weight: bold;
+  border: none;
   cursor: pointer;
-  margin-top: 20px;
+  border-radius: 5px;
+  color: white;
+  margin: 10px;
+  font-weight: bold;
+  padding: 5px 10px;
 }
+.logOutBtn:hover {
+  border-radius: 10%;
+  color: #52a2f3;
+  background-color: #192d40;
+}
+.myClass {
+  transform: rotate(180deg);
+}
+
 #userImg {
   border-radius: 50%;
   cursor: pointer;
 }
 #userImg:hover {
-  opacity: 0.9;
+  opacity: 0.7;
 }
+
 .image-upload {
   display: flex;
   flex-direction: column-reverse;
@@ -87,76 +128,61 @@ input[type="text"] {
 .image-upload > #fileInp {
   display: none;
 }
+#tweet {
+  border: none;
+}
+.selectPnT > label {
+  margin: 48px 0 0 380px;
+}
+.pictureImg > div > #postImg {
+  display: none;
+}
+.pictureImg img {
+  width: 50px;
+}
+
 .email {
   margin-top: -20px;
   margin-bottom: 20px;
   font-size: 0.5em;
 }
-.nav {
-  display: flex;
 
-  flex-wrap: wrap;
-}
-.nav h1 {
-  position: relative;
-  left: 45%;
-  /* left: 30rem; */
-}
-
-.userBio {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  margin: 10px;
-  position: fixed;
-  top: 10px;
-  border: 1px solid #fff;
-  border-radius: 12px;
-  width: 17%;
-}
 .tweetCard {
   margin: 0 5px;
   border-radius: 5px;
   width: 70%;
   height: 20%;
-  word-wrap:break-word
-  
+  word-wrap: break-word;
 }
-.onTweet{
+.onTweet {
   display: flex;
- width: 50%;
- padding: 0 10px;
- margin: 0 auto ;
+  width: 50%;
+  padding: 0 10px;
+  margin: 0 auto;
   text-align: center;
   border-top: 1px solid white;
 }
-.onTweet>img{
+.onTweet > img {
   width: 50px;
   height: 50px;
   border-radius: 50%;
   margin-top: 20px;
-  
 }
 #allTweets h3 {
   display: inline-block;
   text-align: left;
   padding: 20px;
-  
 }
 #userTweets h3 {
   display: inline-block;
   text-align: left;
   padding: 20px;
-  -webkit-box-shadow: -6px 7px 22px -2px rgba(0, 0, 0, 0.22);
-  box-shadow: -6px 7px 22px -2px rgba(0, 0, 0, 0.22);
 }
 /* .tweetImg{
   width: 50px;
   border-radius: 50%;
 } */
-.profileImage{
-  width: 150px;
-  height: 150px;
+.profileImage {
+  width: 120px;
+  height: 120px;
 }

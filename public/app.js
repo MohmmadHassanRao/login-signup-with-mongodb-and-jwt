@@ -92,6 +92,7 @@ const getData = () => {
       sessionStorage.setItem("userEmail", res.data.userData.email);
       sessionStorage.setItem("profileUrl", res.data.userData.profileUrl);
       getAllTweets();
+      document.getElementById("home").style.color = "#52a2f3";
     })
 
     .catch((err) => (window.location.href = "../login.html"));
@@ -121,19 +122,36 @@ const postTweet = () => {
 
 socket.on("NEW_TWEET", (newTweet) => {
   console.log(newTweet);
-  let eachTweet = document.createElement("div");
-  eachTweet.setAttribute("class", "myClass");
-  eachTweet.innerHTML = `<div class="onTweet"><img src="${newTweet.profileUrl}"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3></div>`;
-  // document.getElementById("userTweets").appendChild(eachTweet);
-  document.getElementById("allTweets").appendChild(eachTweet);
+  if (!newTweet.profileUrl) {
+    let eachTweet = document.createElement("div");
+    eachTweet.setAttribute("class", "myClass");
+    eachTweet.innerHTML = `<div class="onTweet"><img src="./user.png"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3></div>`;
+    // document.getElementById("userTweets").appendChild(eachTweet);
+    document.getElementById("allTweets").appendChild(eachTweet);
+  } else {
+    let eachTweet = document.createElement("div");
+    eachTweet.setAttribute("class", "myClass");
+    eachTweet.innerHTML = `<div class="onTweet"><img src="${newTweet.profileUrl}"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3></div>`;
+    // document.getElementById("userTweets").appendChild(eachTweet);
+    document.getElementById("allTweets").appendChild(eachTweet);
+  }
 });
 
 socket.on("NEW_TWEET", (newTweet) => {
   console.log(newTweet);
-  let eachTweet = document.createElement("div");
-  eachTweet.setAttribute("class", "myClass");
-  eachTweet.innerHTML = `<div class="onTweet"><img src="${newTweet.profileUrl}"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3></div>`;
-  document.getElementById("userTweets").appendChild(eachTweet);
+  if (!newTweet.profileUrl) {
+    let eachTweet = document.createElement("div");
+    eachTweet.setAttribute("class", "myClass");
+    eachTweet.innerHTML = `<div class="onTweet"><img src="./user.png"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3></div>`;
+    // document.getElementById("userTweets").appendChild(eachTweet);
+    document.getElementById("userTweets").appendChild(eachTweet);
+  } else {
+    let eachTweet = document.createElement("div");
+    eachTweet.setAttribute("class", "myClass");
+    eachTweet.innerHTML = `<div class="onTweet"><img src="${newTweet.profileUrl}"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3></div>`;
+    // document.getElementById("userTweets").appendChild(eachTweet);
+    document.getElementById("userTweets").appendChild(eachTweet);
+  }
   // document.getElementById("allTweets").appendChild(eachTweet);
 });
 
@@ -142,19 +160,33 @@ const userTweets = () => {
   var toggle = document.getElementById("allTweets");
   toggle.style.display = "none";
   document.getElementById("userTweets").style.display = "block";
+  document.getElementById("home").style.color = "white";
+  document.getElementById("prof").style.color = " #52a2f3";
   axios({
     method: "get",
     url: url + "/userTweets",
   })
     .then((res) => {
-      // console.log("all tweets ==>", res.data.tweets);
+      console.log("all tweets ==>", res.data.tweets);
       let userTweet = res.data.tweets;
       for (let i = 0; i < userTweet.length; i++) {
-        let eachCurrentUserTweet = document.createElement("div");
-        eachCurrentUserTweet.setAttribute("class", "myClass");
+        if (!userTweet[i].profileUrl) {
+          let eachCurrentUserTweet = document.createElement("div");
+          eachCurrentUserTweet.setAttribute("class", "myClass");
 
-        eachTweet.innerHTML = `<div class="onTweet"><img src="${newTweet.profileUrl}"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3></div>`;
-        document.getElementById("userTweets").appendChild(eachCurrentUserTweet);
+          eachCurrentUserTweet.innerHTML = `<div class="onTweet"><img src="./user.png"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${userTweet[i].name}<br /><span class="tweet">${userTweet[i].tweet}</span></h3></div>`;
+          document
+            .getElementById("userTweets")
+            .appendChild(eachCurrentUserTweet);
+        } else {
+          let eachCurrentUserTweet = document.createElement("div");
+          eachCurrentUserTweet.setAttribute("class", "myClass");
+
+          eachCurrentUserTweet.innerHTML = `<div class="onTweet"><img src="${userTweet[i].profileUrl}"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${userTweet[i].name}<br /><span class="tweet">${userTweet[i].tweet}</span></h3></div>`;
+          document
+            .getElementById("userTweets")
+            .appendChild(eachCurrentUserTweet);
+        }
       }
     })
     .catch((err) => console.log("error==>", err));
@@ -164,6 +196,8 @@ const getAllTweets = () => {
   document.getElementById("allTweets").innerHTML = "";
   let toggle = document.getElementById("userTweets");
   toggle.style.display = "none";
+  document.getElementById("prof").style.color = "white";
+  document.getElementById("home").style.color = " #52a2f3";
 
   document.getElementById("allTweets").style.display = "block";
   // toggle.style.display = toggle.style.display != "none" ? "none" : "block";
@@ -177,11 +211,19 @@ const getAllTweets = () => {
       console.log(res);
       let allTweets = res.data.tweets;
       for (let i = 0; i < allTweets.length; i++) {
-        let allUsersTweets = document.createElement("div");
-        allUsersTweets.setAttribute("class", "myClass");
+        if (!allTweets[i].profileUrl) {
+          let allUsersTweets = document.createElement("div");
+          allUsersTweets.setAttribute("class", "myClass");
 
-        allUsersTweets.innerHTML =`<div class="onTweet"><img src="${allTweets[i].profileUrl}" id="tweetImage" class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${allTweets[i].name} <span class="tweet">${allTweets[i].email}</span><br /><span class="tweet">${allTweets[i].tweet}</span></h3></div>`;
-        document.getElementById("allTweets").appendChild(allUsersTweets);
+          allUsersTweets.innerHTML = `<div class="onTweet"><img src="./user.png" id="tweetImage" class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${allTweets[i].name} <span class="tweet">${allTweets[i].email}</span><br /><span class="tweet">${allTweets[i].tweet}</span></h3></div>`;
+          document.getElementById("allTweets").appendChild(allUsersTweets);
+        } else {
+          let allUsersTweets = document.createElement("div");
+          allUsersTweets.setAttribute("class", "myClass");
+
+          allUsersTweets.innerHTML = `<div class="onTweet"><img src="${allTweets[i].profileUrl}" id="tweetImage" class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${allTweets[i].name} <span class="tweet">${allTweets[i].email}</span><br /><span class="tweet">${allTweets[i].tweet}</span></h3></div>`;
+          document.getElementById("allTweets").appendChild(allUsersTweets);
+        }
       }
     })
     .catch((err) => console.log("error==>", err));
@@ -262,25 +304,17 @@ const upload = () => {
       console.log("upload success", res.data);
       console.log("message", res.data.message);
       console.log("photo url", res.data.url);
-      // var img = document.createElement("img");
-      // img.setAttribute("src", res.data.url);
-      // img.setAttribute("width", "100");
-      // img.setAttribute("height", "100");
-      // img.setAttribute("alt", "user image");
-      // document.getElementById("img").appendChild(img);
       document.getElementById("userImg").src = res.data.url;
-      // document.getElementById("fileInput").style.display = "none";
       document.getElementById("uploadBtn").style.display = "none";
     })
     .catch((err) => console.log(err));
 
   return false;
 };
-const showProfile = () => {
-  document.getElementById("userImg").src = "./shield.png";
-  document.getElementById("tweetImage").src = "./shield.png";
-  document.getElementById("uploadBtn").style.display = "block";
-};
+// const showProfile = () => {
+//   document.getElementById("userImg").src = "./shield.png";
+//   document.getElementById("uploadBtn").style.display = "block";
+// };
 
 const logout = () => {
   axios({

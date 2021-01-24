@@ -3,55 +3,74 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
+      integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
+      crossorigin="anonymous"
+    />
     <link rel="stylesheet" href="style.css" />
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="../socket.io.js"></script>
     <title>Tweets</title>
-    <style>
-      .myClass {
-        transform: rotate(180deg);
-      }
-    </style>
   </head>
 
   <body onload="getData()">
-    <!-- NAVBAR -->
-    <div class="nav">
-      <h1 class="logo">Twitter</h1>
-      <button class="logOutBtn" onclick="logout()">Logout</button>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12 d-flex justify-content-end">
+          <button class="logOutBtn" onclick="logout()">Logout</button>
+        </div>
+      </div>
     </div>
     <!-- USER BIO -->
-    <div class="userBio">
-      <h5>Welcome <span id="welcomeUser"></span><br /></h5>
-      <small class="email"> <span id="currentUserEmail"></span></small>
-      <!-- Upload Image -->
-      <form onsubmit="return upload()" class="image-upload">
-        <input type="file" id="fileInp" onchange="showProfile()" /><br />
-        <input type="submit" value="upload" id="uploadBtn" class="uBtn" />
-        <label for="fileInp">
-          <img alt="profile image" id="userImg" class="profileImage" />
-        </label>
-      </form>
-    </div>
-    <!-- Post tweet section -->
-    <div>
-      <div class="postTweet">
-        <h1>Post Tweets</h1>
-        <form onsubmit="return postTweet()">
-          <input type="text" id="tweet" />
-          <button class="postBtn">Tweet</button>
-        </form>
-      </div>
-      <div class="tweetContainer">
-        <div>
-          <button class="action" onclick="userTweets()">Your Tweets</button>
-          <button class="action" onclick="getAllTweets()">All Tweets</button>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-2 leftside">
+          <!-- Upload Image -->
+          <form onsubmit="return upload()" class="image-upload">
+            <input type="file" id="fileInp" onchange="upload()" /><br />
+            <label for="fileInp">
+              <img alt="profile image" id="userImg" class="profileImage" />
+            </label>
+          </form>
+          <h5><span id="welcomeUser"></span><br /></h5>
+          <p><span id="currentUserEmail"></span></p>
+          <button class="action" onclick="getAllTweets()" id="home">
+            <i class="fas fa-home"></i>Home</button
+          ><br />
+          <button class="action" onclick="userTweets()" id="prof">
+            <i class="fas fa-user"></i> Profile
+          </button>
         </div>
-
-        <div id="userTweets" style="transform: rotate(180deg)"></div>
-        <div id="allTweets" style="transform: rotate(180deg)"></div>
+        <!-- POST TWEETS -->
+        <div class="col-10 rightside">
+          <div class="postTweet d-flex justify-content-center">
+            <form onsubmit="return postTweet()" class="pictureImg">
+              <input type="text" id="tweet" placeholder="What's Happening?" />
+              <div class="selectPnT">
+                <input type="file" id="postImg" />
+                <label for="postImg">
+                  <i class="far fa-image fa-lg"></i>
+                </label>
+                <button class="postBtn">Tweet</button>
+              </div>
+            </form>
+          </div>
+          <div>
+            <div id="userTweets" style="transform: rotate(180deg)"></div>
+            <div id="allTweets" style="transform: rotate(180deg)"></div>
+          </div>
+        </div>
       </div>
     </div>
+
     <script src="../app.js"></script>
   </body>
 </html>
