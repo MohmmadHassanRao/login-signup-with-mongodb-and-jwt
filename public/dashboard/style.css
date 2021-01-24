@@ -56,7 +56,7 @@ body {
 }
 .action:hover {
   border-radius: 10%;
-  color: #52a2f3;
+  color: #52a2f3 !important;
   background-color: #192d40;
 }
 .action i {
@@ -65,7 +65,7 @@ body {
 .postTweet {
   margin: 0 auto;
   border: 1px solid gray;
-  height: 120px;
+  height: 140px;
   width: 500px;
 }
 
@@ -85,11 +85,13 @@ input[type="text"] {
 
 .postBtn {
   border: 1px solid #ffffff;
-  background: none;
-  border-radius: 5px;
+  background: #52a2f3;
+  border: none;
+  border-radius: 15px;
   color: white;
-  padding: 10px;
+  padding: 5px 10px;
   font-weight: bold;
+  font-size: 0.8em;
 }
 /* .reverse {
   transform: rotate(180deg);
@@ -130,9 +132,27 @@ input[type="text"] {
 }
 #tweet {
   border: none;
+  margin: 10px;
+  padding: 10px;
+  width: 410px;
+}
+#tweet:focus {
+  outline: none;
+  border-bottom: 1px solid gray;
+}
+#dimg {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-left: 5px;
 }
 .selectPnT > label {
-  margin: 48px 0 0 380px;
+  margin: 35px 0 0 390px;
+}
+.selectPnT > label > i {
+  position: relative;
+  top: 5px;
+  right: 5px;
 }
 .pictureImg > div > #postImg {
   display: none;

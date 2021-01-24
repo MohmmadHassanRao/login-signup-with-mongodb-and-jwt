@@ -305,7 +305,8 @@ const upload = () => {
       console.log("message", res.data.message);
       console.log("photo url", res.data.url);
       document.getElementById("userImg").src = res.data.url;
-      document.getElementById("uploadBtn").style.display = "none";
+
+      document.getElementById("dimg").src = res.data.url;
     })
     .catch((err) => console.log(err));
 
