@@ -86,6 +86,7 @@ app.use(function (req, res, next) {
           httpOnly: true,
         });
         req.body.jToken = decodedData;
+        req.headers.jToken = decodedData;
         next();
       }
     } else {
@@ -146,11 +147,11 @@ app.post("/postTweet", upload.any(), (req, res) => {
           .then((urlData, err) => {
             if (!err) {
               console.log("public downloadable url: ", urlData[0]); // this is public downloadable url
-              userModel.findOne(
-                { email: req.body.email },
-
+              userModel.findById(
+                req.headers.jToken.id,
+                "name email profileUrl",
                 (err, user) => {
-                  console.log(user);
+                  console.log("toke user", user);
                   if (!err) {
                     console.log("tweet user", user);
                     tweetModel

@@ -1,5 +1,5 @@
-// const url = "http://localhost:5000";
-const url = "https://login-signup-jwt.herokuapp.com";
+const url = "http://localhost:5000";
+// const url = "https://login-signup-jwt.herokuapp.com";
 var socket = io(url);
 socket.on("connect", () => {
   console.log("connected");
@@ -132,11 +132,11 @@ const postTweet = () => {
 };
 
 socket.on("NEW_TWEET", (newTweet) => {
-  // console.log(newTweet);
+  console.log(newTweet.postUrl);
   if (!newTweet.profileUrl) {
     let eachTweet = document.createElement("div");
     eachTweet.setAttribute("class", "myClass");
-    eachTweet.innerHTML = `<div class="onTweet"><img src="./user.png"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3></div>`;
+    eachTweet.innerHTML = `<div class="onTweet"><img src="./user.png"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3></div><br /><img class='postUrl' src ="${newTweet.postUrl}" width="200px"  />`;
     // document.getElementById("userTweets").appendChild(eachTweet);
     document.getElementById("allTweets").appendChild(eachTweet);
   } else {
