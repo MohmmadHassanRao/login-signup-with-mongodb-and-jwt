@@ -1,5 +1,5 @@
-// const url = "http://localhost:5000";
-const url = "https://login-signup-jwt.herokuapp.com";
+const url = "http://localhost:5000";
+// const url = "https://login-signup-jwt.herokuapp.com";
 var socket = io(url);
 socket.on("connect", () => {
   console.log("connected");
@@ -77,6 +77,7 @@ const getData = () => {
     url: `${url}/userData`,
   })
     .then((res) => {
+      console.log(res);
       // console.log("current user data", res);
       welcomeUser.innerHTML = res.data.userData.name;
       // console.log("profile url is==>", res.data.userData);
@@ -103,17 +104,27 @@ const postTweet = () => {
   // get user email with session storage
   var email = sessionStorage.getItem("userEmail");
   var userTweet = document.getElementById("tweet").value;
-  console.log(userTweet);
+  var userPostImg = document.getElementById("postImg");
+  console.log("user tweet image", userPostImg.files[0]);
+  // console.log(userTweet);
+  let formData = new FormData();
+  formData.append("email", email);
+  formData.append("tweet", userTweet);
+  formData.append("myFile", userPostImg.files[0]);
+
+  // console.log(formData);
+
   axios({
     method: "post",
     url: url + "/postTweet",
-    data: {
-      email: email,
-      tweet: userTweet,
+    data: formData,
+    headers: {
+      "Content-Type": "multipart/form-data;",
     },
   })
     .then((res) => {
-      console.log(res);
+      console.log(res.data.postUrl);
+      console.log(res.data.url);
     })
     .catch((err) => console.log(err));
   document.getElementById("tweet").value = "";
@@ -121,7 +132,7 @@ const postTweet = () => {
 };
 
 socket.on("NEW_TWEET", (newTweet) => {
-  console.log(newTweet);
+  // console.log(newTweet);
   if (!newTweet.profileUrl) {
     let eachTweet = document.createElement("div");
     eachTweet.setAttribute("class", "myClass");
@@ -138,7 +149,7 @@ socket.on("NEW_TWEET", (newTweet) => {
 });
 
 socket.on("NEW_TWEET", (newTweet) => {
-  console.log(newTweet);
+  // console.log(newTweet);
   if (!newTweet.profileUrl) {
     let eachTweet = document.createElement("div");
     eachTweet.setAttribute("class", "myClass");

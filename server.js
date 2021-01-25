@@ -99,7 +99,7 @@ app.get("/userData", (req, res, next) => {
 
   userModel.findById(
     req.body.jToken.id,
-    "name email profileUrl",
+    "name email profileUrl postUrl",
     function (err, data) {
       if (!err) {
         res.send({
@@ -115,8 +115,9 @@ app.get("/userData", (req, res, next) => {
   );
 });
 
-app.post("/postTweet", (req, res) => {
-  console.log(req.body);
+app.post("/postTweet", upload.any(), (req, res) => {
+  console.log("req post body", req.body);
+  console.log("req post files", req.files);
   if (!req.body.tweet || !req.body.email) {
     res.status(403).send(`
               please send tweet in json body.
@@ -127,6 +128,79 @@ app.post("/postTweet", (req, res) => {
               }`);
     return;
   }
+  bucket.upload(
+    req.files[0].path,
+    // {
+    //     destination: `${new Date().getTime()}-new-image.png`, // give destination name if you want to give a certain name to file in bucket, include date to make name unique otherwise it will replace previous file with the same name
+    // },
+    function (err, file, apiResponse) {
+      if (!err) {
+        // console.log("api resp: ", apiResponse);
+
+        // https://googleapis.dev/nodejs/storage/latest/Bucket.html#getSignedUrl
+        file
+          .getSignedUrl({
+            action: "read",
+            expires: "03-09-2491",
+          })
+          .then((urlData, err) => {
+            if (!err) {
+              console.log("public downloadable url: ", urlData[0]); // this is public downloadable url
+              userModel.findOne(
+                { email: req.body.email },
+
+                (err, user) => {
+                  console.log(user);
+                  if (!err) {
+                    console.log("tweet user", user);
+                    tweetModel
+                      .create({
+                        email: req.body.email,
+                        name: user.name,
+                        tweet: req.body.tweet,
+                        profileUrl: user.profileUrl,
+                        postUrl: urlData[0],
+                      })
+                      .then((data) => {
+                        console.log("tweet posted", data);
+                        res.send({
+                          message: "tweet posted",
+                          name: user.name,
+                          email: user.email,
+                          profileUrl: user.profileUrl,
+                          postUrl: data.postUrl,
+                        });
+                        io.emit("NEW_TWEET", data);
+                      })
+                      .catch((err) =>
+                        res.status(500).send("an error occurred" + err)
+                      );
+                  } else {
+                    res.status(500).send("db error");
+                  }
+                }
+              );
+              // // delete file from folder before sending response back to client (optional but recommended)
+              // // optional because it is gonna delete automatically sooner or later
+              // // recommended because you may run out of space if you dont do so, and if your files are sensitive it is simply not safe in server folder
+              // try {
+              //     fs.unlinkSync(req.files[0].path)
+              //     //file removed
+              // } catch (err) {
+              //     console.error(err)
+              // }
+              // res.send({
+              //   message: "ok",
+              //   url: urlData[0],
+              // });
+            }
+          });
+      } else {
+        console.log("err: ", err);
+        res.status(500).send();
+      }
+    }
+  );
 
   // userModel.findOneAndUpdate(
   //   { email: req.body.email },
@@ -141,31 +215,6 @@ app.post("/postTweet", (req, res) => {
   //     }
   //   }
   // );
-  userModel.findById(req.body.jToken.id, "name email profileUrl", (err, user) => {
-    if (!err) {
-      console.log("tweet user", user);
-      tweetModel
-        .create({
-          email: req.body.email,
-          name: user.name,
-          tweet: req.body.tweet,
-          profileUrl: user.profileUrl
-        })
-        .then((data) => {
-          console.log("tweet posted", data);
-          res.send({
-            message: "tweet posted",
-            name: user.name,
-            email: user.email,
-            profileUrl:user.profileUrl
-          });
-          io.emit("NEW_TWEET", data);
-        })
-        .catch((err) => res.status(500).send("an error occurred" + err));
-    } else {
-      res.status(500).send("db error");
-    }
-  });
 });
 app.get("/userTweets", (req, res) => {
   console.log("my tweets user", req.body);
@@ -198,7 +247,7 @@ app.get("/getAllTweets", (req, res) => {
 });
 app.post("/upload", upload.any(), (req, res, next) => {
   console.log("req.body: ", JSON.parse(req.body.myDetails));
-  let userEmail = JSON.parse(req.body.myDetails)
+  let userEmail = JSON.parse(req.body.myDetails);
   // console.log("req.email: ", req.body.myDetails);
   console.log("req.files: ", req.files);
 
@@ -225,40 +274,38 @@ app.post("/upload", upload.any(), (req, res, next) => {
           .then((urlData, err) => {
             if (!err) {
               console.log("public downloadable url: ", urlData[0]); // this is public downloadable url
-              userModel.findOne(
-                { email: userEmail.email },
-                (err, data) => {
-                  if (!err) {
-                    console.log("userFound", data);
-                    tweetModel.updateMany({email:userEmail.email},{profileUrl:urlData[0]},(err,tweet)=>{
-                      if(!err){
-                        console.log("tweet model updated");
-                      }
-                    })
-                  } else {
-                    console.log("user not found");
-                  }
-                  data.update(
+              userModel.findOne({ email: userEmail.email }, (err, data) => {
+                if (!err) {
+                  console.log("userFound", data);
+                  tweetModel.updateMany(
+                    { email: userEmail.email },
                     { profileUrl: urlData[0] },
-                    
-                    (err, updatedUrl) => {
+                    (err, tweet) => {
                       if (!err) {
-                        res.status(200).send({
-                          message: "profile picture updated succesfully",
-                          url: urlData[0],
-                        });
-                      } else {
-                        res.status(500).send({
-                          message: "an error occured",
-                        });
+                        console.log("tweet model updated");
                       }
                     }
                   );
-                  
-                  
-                  
+                } else {
+                  console.log("user not found");
                 }
-              );
+                data.update(
+                  { profileUrl: urlData[0] },
+
+                  (err, updatedUrl) => {
+                    if (!err) {
+                      res.status(200).send({
+                        message: "profile picture updated succesfully",
+                        url: urlData[0],
+                      });
+                    } else {
+                      res.status(500).send({
+                        message: "an error occured",
+                      });
+                    }
+                  }
+                );
+              });
 
               // // delete file from folder before sending response back to client (optional but recommended)
               // // optional because it is gonna delete automatically sooner or later
