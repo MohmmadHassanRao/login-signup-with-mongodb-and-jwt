@@ -1,5 +1,5 @@
-// const url = "http://localhost:5000";
-const url = "https://login-signup-jwt.herokuapp.com";
+const url = "http://localhost:5000";
+// const url = "https://login-signup-jwt.herokuapp.com";
 var socket = io(url);
 socket.on("connect", () => {
   console.log("connected");
@@ -136,13 +136,13 @@ socket.on("NEW_TWEET", (newTweet) => {
   if (!newTweet.profileUrl) {
     let eachTweet = document.createElement("div");
     eachTweet.setAttribute("class", "myClass");
-    eachTweet.innerHTML = `<div class="onTweet"><img src="./user.png"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3></div><br /><img class='postUrl' src ="${newTweet.postUrl}" width="200px"  />`;
+    eachTweet.innerHTML = `<div class="onTweet"><img src="./user.png"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3></div><br />`;
     // document.getElementById("userTweets").appendChild(eachTweet);
     document.getElementById("allTweets").appendChild(eachTweet);
   } else {
     let eachTweet = document.createElement("div");
     eachTweet.setAttribute("class", "myClass");
-    eachTweet.innerHTML = `<div class="onTweet"><img src="${newTweet.profileUrl}"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3></div>`;
+    eachTweet.innerHTML = `<div class="onTweet"><img src="${newTweet.profileUrl}"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3><br/><img  src="${newTweet.postUrl}" class='postUrl' width="200px"/> </div>`;
     // document.getElementById("userTweets").appendChild(eachTweet);
     document.getElementById("allTweets").appendChild(eachTweet);
   }

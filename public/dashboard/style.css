@@ -194,6 +194,7 @@ input[type="text"] {
 }
 .onTweet > .postUrl {
   border-radius: 0 !important;
+  width: 500px;
 }
 #allTweets h3 {
   display: inline-block;
