@@ -70,9 +70,9 @@ body {
 }
 
 .tweet {
-  font-weight: 100;
   font-size: 0.8em;
   color: #fff;
+  font-weight: lighter;
 }
 
 input[type="text"] {
@@ -176,11 +176,13 @@ input[type="text"] {
 }
 .onTweet {
   display: flex;
-  width: 50%;
-  padding: 0 10px;
+  flex-direction: column;
+  width: 500px;
+  padding: 10px 10px;
   margin: 10px auto;
   text-align: center;
-  border-bottom: 1px solid gray;
+  border: 1px solid gray;
+  border-radius: 10px;
 }
 .onTweet > h3 {
   font-size: medium;
@@ -193,13 +195,17 @@ input[type="text"] {
   margin-right: -10px;
 }
 .onTweet > .postUrl {
-  border-radius: 0 !important;
-  width: 500px;
+  border-radius: 10px !important;
+  width: 477px;
+  height: 246px;
+  margin-top: -17px;
 }
 #allTweets h3 {
   display: inline-block;
   text-align: left;
   padding: 20px;
+  margin-top: -70px;
+  margin-left: 39px;
 }
 #userTweets h3 {
   display: inline-block;
@@ -213,4 +219,8 @@ input[type="text"] {
 .profileImage {
   width: 120px;
   height: 120px;
+}
+.tweetEmail {
+  font-size: 0.75em;
+  color: darkgray;
 }

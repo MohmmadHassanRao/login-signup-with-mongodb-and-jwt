@@ -116,7 +116,7 @@ app.get("/userData", (req, res, next) => {
   );
 });
 
-app.post("/postTweet", upload.any(), (req, res) => {
+app.post("/postTweet", (req, res) => {
   console.log("req post body", req.body);
   console.log("req post files", req.files);
   if (!req.body.tweet || !req.body.email) {
@@ -129,76 +129,35 @@ app.post("/postTweet", upload.any(), (req, res) => {
               }`);
     return;
   }
-  bucket.upload(
-    req.files[0].path,
-    // {
-    //     destination: `${new Date().getTime()}-new-image.png`, // give destination name if you want to give a certain name to file in bucket, include date to make name unique otherwise it will replace previous file with the same name
-    // },
-    function (err, file, apiResponse) {
-      if (!err) {
-        // console.log("api resp: ", apiResponse);
 
-        // https://googleapis.dev/nodejs/storage/latest/Bucket.html#getSignedUrl
-        file
-          .getSignedUrl({
-            action: "read",
-            expires: "03-09-2491",
+  // yahan par if ki condition lagni hai k agar user ne tweet k sath image nhi bheji to khali tweet jae warna postUrl k sath jae
+  userModel.findById(
+    req.body.jToken.id,
+    "name email profileUrl",
+    (err, user) => {
+      console.log("toke user", user);
+      if (!err) {
+        console.log("tweet user", user);
+        tweetModel
+          .create({
+            email: req.body.email,
+            name: user.name,
+            tweet: req.body.tweet,
+            profileUrl: user.profileUrl,
           })
-          .then((urlData, err) => {
-            if (!err) {
-              console.log("public downloadable url: ", urlData[0]); // this is public downloadable url
-              userModel.findById(
-                req.headers.jToken.id,
-                "name email profileUrl",
-                (err, user) => {
-                  console.log("toke user", user);
-                  if (!err) {
-                    console.log("tweet user", user);
-                    tweetModel
-                      .create({
-                        email: req.body.email,
-                        name: user.name,
-                        tweet: req.body.tweet,
-                        profileUrl: user.profileUrl,
-                        postUrl: urlData[0],
-                      })
-                      .then((data) => {
-                        console.log("tweet posted", data);
-                        res.send({
-                          message: "tweet posted",
-                          name: user.name,
-                          email: user.email,
-                          profileUrl: user.profileUrl,
-                          postUrl: data.postUrl,
-                        });
-                        io.emit("NEW_TWEET", data);
-                      })
-                      .catch((err) =>
-                        res.status(500).send("an error occurred" + err)
-                      );
-                  } else {
-                    res.status(500).send("db error");
-                  }
-                }
-              );
-              // // delete file from folder before sending response back to client (optional but recommended)
-              // // optional because it is gonna delete automatically sooner or later
-              // // recommended because you may run out of space if you dont do so, and if your files are sensitive it is simply not safe in server folder
-              // try {
-              //     fs.unlinkSync(req.files[0].path)
-              //     //file removed
-              // } catch (err) {
-              //     console.error(err)
-              // }
-              // res.send({
-              //   message: "ok",
-              //   url: urlData[0],
-              // });
-            }
-          });
+          .then((data) => {
+            console.log("tweet posted", data);
+            res.send({
+              message: "tweet posted",
+              name: user.name,
+              email: user.email,
+              profileUrl: user.profileUrl,
+            });
+            io.emit("NEW_TWEET", data);
+          })
+          .catch((err) => res.status(500).send("an error occurred" + err));
       } else {
-        console.log("err: ", err);
-        res.status(500).send();
+        res.status(500).send("db error");
       }
     }
   );
@@ -308,6 +267,81 @@ app.post("/upload", upload.any(), (req, res, next) => {
                 );
               });
 
+              // // delete file from folder before sending response back to client (optional but recommended)
+              // // optional because it is gonna delete automatically sooner or later
+              // // recommended because you may run out of space if you dont do so, and if your files are sensitive it is simply not safe in server folder
+              // try {
+              //     fs.unlinkSync(req.files[0].path)
+              //     //file removed
+              // } catch (err) {
+              //     console.error(err)
+              // }
+              // res.send({
+              //   message: "ok",
+              //   url: urlData[0],
+              // });
+            }
+          });
+      } else {
+        console.log("err: ", err);
+        res.status(500).send();
+      }
+    }
+  );
+});
+app.post("/postTweetWithPic", upload.any(), (req, res) => {
+  bucket.upload(
+    req.files[0].path,
+    // {
+    //     destination: `${new Date().getTime()}-new-image.png`, // give destination name if you want to give a certain name to file in bucket, include date to make name unique otherwise it will replace previous file with the same name
+    // },
+    function (err, file, apiResponse) {
+      if (!err) {
+        // console.log("api resp: ", apiResponse);
+
+        // https://googleapis.dev/nodejs/storage/latest/Bucket.html#getSignedUrl
+        file
+          .getSignedUrl({
+            action: "read",
+            expires: "03-09-2491",
+          })
+          .then((urlData, err) => {
+            if (!err) {
+              console.log("public downloadable url: ", urlData[0]); // this is public downloadable url
+              userModel.findById(
+                req.headers.jToken.id,
+                "name email profileUrl",
+                (err, user) => {
+                  console.log("toke user", user);
+                  if (!err) {
+                    console.log("tweet user", user);
+                    tweetModel
+                      .create({
+                        email: req.body.email,
+                        name: user.name,
+                        tweet: req.body.tweet,
+                        profileUrl: user.profileUrl,
+                        postUrl: urlData[0],
+                      })
+                      .then((data) => {
+                        console.log("tweet posted", data);
+                        res.send({
+                          message: "tweet posted",
+                          name: user.name,
+                          email: user.email,
+                          profileUrl: user.profileUrl,
+                          postUrl: data.postUrl,
+                        });
+                        io.emit("NEW_TWEET", data);
+                      })
+                      .catch((err) =>
+                        res.status(500).send("an error occurred" + err)
+                      );
+                  } else {
+                    res.status(500).send("db error");
+                  }
+                }
+              );
               // // delete file from folder before sending response back to client (optional but recommended)
               // // optional because it is gonna delete automatically sooner or later
               // // recommended because you may run out of space if you dont do so, and if your files are sensitive it is simply not safe in server folder

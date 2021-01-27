@@ -91,7 +91,6 @@ const getData = () => {
         // document.getElementById("tweetImage").src = res.data.userData.profileUrl;
       }
       sessionStorage.setItem("userEmail", res.data.userData.email);
-      sessionStorage.setItem("profileUrl", res.data.userData.profileUrl);
       getAllTweets();
       document.getElementById("home").style.color = "#52a2f3";
     })
@@ -106,57 +105,108 @@ const postTweet = () => {
   var userTweet = document.getElementById("tweet").value;
   var userPostImg = document.getElementById("postImg");
   console.log("user tweet image", userPostImg.files[0]);
-  // console.log(userTweet);
-  let formData = new FormData();
-  formData.append("email", email);
-  formData.append("tweet", userTweet);
-  formData.append("myFile", userPostImg.files[0]);
+
+  if (!userPostImg.value) {
+    axios({
+      method: "post",
+      url: url + "/postTweet",
+      data: {
+        email: email,
+        tweet: userTweet,
+      },
+    })
+      .then((res) => {
+        console.log(res.data.postUrl);
+        console.log(res.data.profileUrl);
+      })
+      .catch((err) => console.log(err));
+  } else if (userPostImg.value) {
+    let formData = new FormData();
+    formData.append("email", email);
+    formData.append("tweet", userTweet);
+    formData.append("myFile", userPostImg.files[0]);
+
+    axios({
+      method: "post",
+      url: url + "/postTweetWithPic",
+      data: formData,
+      headers: {
+        "Content-Type": "multipart/form-data;",
+      },
+    })
+      .then((res) => {
+        console.log(res.data.postUrl);
+        console.log(res.data.profileUrl);
+      })
+      .catch((err) => console.log(err));
+  }
 
   // console.log(formData);
 
-  axios({
-    method: "post",
-    url: url + "/postTweet",
-    data: formData,
-    headers: {
-      "Content-Type": "multipart/form-data;",
-    },
-  })
-    .then((res) => {
-      console.log(res.data.postUrl);
-      console.log(res.data.url);
-    })
-    .catch((err) => console.log(err));
+  // axios({
+  //   method: "post",
+  //   url: url + "/postTweet",
+  //   data: formData,
+  //   headers: {
+  //     "Content-Type": "multipart/form-data;",
+  //   },
+  // })
+  //   .then((res) => {
+  //     console.log(res.data.postUrl);
+  //     console.log(res.data.profileUrl);
+  //   })
+  //   .catch((err) => console.log(err));
   document.getElementById("tweet").value = "";
+  document.getElementById("postImg").value = "";
   return false;
 };
 
 socket.on("NEW_TWEET", (newTweet) => {
   console.log(newTweet.postUrl);
-  if (!newTweet.profileUrl) {
+  if (!newTweet.profileUrl && !newTweet.postUrl) {
     let eachTweet = document.createElement("div");
     eachTweet.setAttribute("class", "myClass");
-    eachTweet.innerHTML = `<div class="onTweet"><img src="./user.png"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3></div><br />`;
+    eachTweet.innerHTML = `<div class="onTweet"><img src="./user.png"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<span class="tweetEmail">${newTweet.email}</span><br /><span class="tweet">${newTweet.tweet}</span></h3></div><br />`;
+    // document.getElementById("userTweets").appendChild(eachTweet);
+    document.getElementById("allTweets").appendChild(eachTweet);
+  } else if (newTweet.profileUrl && !newTweet.postUrl) {
+    let eachTweet = document.createElement("div");
+    eachTweet.setAttribute("class", "myClass");
+    eachTweet.innerHTML = `<div class="onTweet"><img src="${newTweet.profileUrl}"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<span class="tweetEmail">${newTweet.email}</span><br /><span class="tweet">${newTweet.tweet}</span></h3></div>`;
+    // document.getElementById("userTweets").appendChild(eachTweet);
+    document.getElementById("allTweets").appendChild(eachTweet);
+  } else if (!newTweet.profileUrl && newTweet.postUrl) {
+    let eachTweet = document.createElement("div");
+    eachTweet.setAttribute("class", "myClass");
+    eachTweet.innerHTML = `<div class="onTweet"><img src="./user.png"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<span class="tweetEmail">${newTweet.email}</span><br /><span class="tweet">${newTweet.tweet}</span></h3><br/><img  src="${newTweet.postUrl}" class='postUrl' width="200px"/> </div>`;
+    // document.getElementById("userTweets").appendChild(eachTweet);
+    document.getElementById("allTweets").appendChild(eachTweet);
+  } else if (newTweet.profileUrl && newTweet.postUrl) {
+    let eachTweet = document.createElement("div");
+    eachTweet.setAttribute("class", "myClass");
+    eachTweet.innerHTML = `<div class="onTweet"><img src="${newTweet.profileUrl}"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<span class="tweetEmail">${newTweet.email}</span><br /><span class="tweet">${newTweet.tweet}</span></h3><br/><img  src="${newTweet.postUrl}" class='postUrl' /> </div>`;
     // document.getElementById("userTweets").appendChild(eachTweet);
     document.getElementById("allTweets").appendChild(eachTweet);
   } else {
-    let eachTweet = document.createElement("div");
-    eachTweet.setAttribute("class", "myClass");
-    eachTweet.innerHTML = `<div class="onTweet"><img src="${newTweet.profileUrl}"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3><br/><img  src="${newTweet.postUrl}" class='postUrl' width="200px"/> </div>`;
-    // document.getElementById("userTweets").appendChild(eachTweet);
-    document.getElementById("allTweets").appendChild(eachTweet);
+    console.log("error");
   }
 });
 
 socket.on("NEW_TWEET", (newTweet) => {
   // console.log(newTweet);
-  if (!newTweet.profileUrl) {
+  if (!newTweet.profileUrl && !newTweet.postUrl) {
     let eachTweet = document.createElement("div");
     eachTweet.setAttribute("class", "myClass");
     eachTweet.innerHTML = `<div class="onTweet"><img src="./user.png"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3></div>`;
     // document.getElementById("userTweets").appendChild(eachTweet);
     document.getElementById("userTweets").appendChild(eachTweet);
-  } else {
+  } else if (newTweet.profileUrl && !newTweet.postUrl) {
+    let eachTweet = document.createElement("div");
+    eachTweet.setAttribute("class", "myClass");
+    eachTweet.innerHTML = `<div class="onTweet"><img src="${newTweet.profileUrl}"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3></div>`;
+    // document.getElementById("userTweets").appendChild(eachTweet);
+    document.getElementById("userTweets").appendChild(eachTweet);
+  } else if (newTweet.profileUrl && !newTweet.postUrl) {
     let eachTweet = document.createElement("div");
     eachTweet.setAttribute("class", "myClass");
     eachTweet.innerHTML = `<div class="onTweet"><img src="${newTweet.profileUrl}"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${newTweet.name}<br /><span class="tweet">${newTweet.tweet}</span></h3></div>`;
@@ -222,18 +272,30 @@ const getAllTweets = () => {
       console.log(res);
       let allTweets = res.data.tweets;
       for (let i = 0; i < allTweets.length; i++) {
-        if (!allTweets[i].profileUrl) {
-          let allUsersTweets = document.createElement("div");
-          allUsersTweets.setAttribute("class", "myClass");
-
-          allUsersTweets.innerHTML = `<div class="onTweet"><img src="./user.png" id="tweetImage" class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${allTweets[i].name} <span class="tweet">${allTweets[i].email}</span><br /><span class="tweet">${allTweets[i].tweet}</span></h3></div>`;
-          document.getElementById("allTweets").appendChild(allUsersTweets);
-        } else {
-          let allUsersTweets = document.createElement("div");
-          allUsersTweets.setAttribute("class", "myClass");
-
-          allUsersTweets.innerHTML = `<div class="onTweet"><img src="${allTweets[i].profileUrl}" id="tweetImage" class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${allTweets[i].name} <span class="tweet">${allTweets[i].email}</span><br /><span class="tweet">${allTweets[i].tweet}</span></h3></div>`;
-          document.getElementById("allTweets").appendChild(allUsersTweets);
+        if (!allTweets[i].profileUrl && !allTweets[i].postUrl) {
+          let eachTweet = document.createElement("div");
+          eachTweet.setAttribute("class", "myClass");
+          eachTweet.innerHTML = `<div class="onTweet"><img src="./user.png"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${allTweets[i].name}<span class="tweetEmail">${allTweets[i].email}</span><br /><span class="tweet">${allTweets[i].tweet}</span></h3></div><br />`;
+          // document.getElementById("userTweets").appendChild(eachTweet);
+          document.getElementById("allTweets").appendChild(eachTweet);
+        } else if (allTweets[i].profileUrl && !allTweets[i].postUrl) {
+          let eachTweet = document.createElement("div");
+          eachTweet.setAttribute("class", "myClass");
+          eachTweet.innerHTML = `<div class="onTweet"><img src="${allTweets[i].profileUrl}"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${allTweets[i].name}<span class="tweetEmail">${allTweets[i].email}</span><br /><span class="tweet">${allTweets[i].tweet}</span></h3><br/></div>`;
+          // document.getElementById("userTweets").appendChild(eachTweet);
+          document.getElementById("allTweets").appendChild(eachTweet);
+        } else if (!allTweets[i].profileUrl && allTweets[i].postUrl) {
+          let eachTweet = document.createElement("div");
+          eachTweet.setAttribute("class", "myClass");
+          eachTweet.innerHTML = `<div class="onTweet"><img src="./user.png"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${allTweets[i].name}<span class="tweetEmail">${allTweets[i].email}</span><br /><span class="tweet">${allTweets[i].tweet}</span></h3><br/><img  src="${allTweets[i].postUrl}" class='postUrl' width="200px"/> </div>`;
+          // document.getElementById("userTweets").appendChild(eachTweet);
+          document.getElementById("allTweets").appendChild(eachTweet);
+        } else if (allTweets[i].profileUrl && allTweets[i].postUrl) {
+          let eachTweet = document.createElement("div");
+          eachTweet.setAttribute("class", "myClass");
+          eachTweet.innerHTML = `<div class="onTweet"><img src="${allTweets[i].profileUrl}"  class="tweetImg" alt="use profile"/><h3 class="tweetCard">  ${allTweets[i].name}<span class="tweetEmail">${allTweets[i].email}</span><br /><span class="tweet">${allTweets[i].tweet}</span></h3><br/><img  src="${allTweets[i].postUrl}" class='postUrl' /> </div>`;
+          // document.getElementById("userTweets").appendChild(eachTweet);
+          document.getElementById("allTweets").appendChild(eachTweet);
         }
       }
     })
