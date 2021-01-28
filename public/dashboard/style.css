@@ -180,12 +180,14 @@ input[type="text"] {
 .onTweet {
   display: flex;
   flex-direction: column;
-  width: 500px;
-  padding: 10px 10px;
-  margin: 10px auto;
+  align-items: flex-start;
+  width: 501px;
+  padding: 12px 7px 12px 6px;
+  margin: 0 auto;
   text-align: center;
-  border: 1px solid gray;
-  border-radius: 10px;
+  border-right: 1px solid gray;
+  border-left: 1px solid gray;
+  border-bottom: 1px solid gray;
 }
 .onTweet > h3 {
   font-size: medium;
@@ -194,8 +196,6 @@ input[type="text"] {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  margin-top: 10px;
-  margin-right: -10px;
 }
 .onTweet > .postUrl {
   border-radius: 15px !important;
