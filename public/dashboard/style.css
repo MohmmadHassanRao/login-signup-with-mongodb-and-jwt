@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Playfair+Display:400,900|Poppins:400,500");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap");
 
 body {
   background: #15202b;
@@ -70,11 +71,13 @@ body {
 }
 
 .tweet {
-  font-size: 0.8em;
+  font-size: 1em;
   color: #fff;
   font-weight: lighter;
+  display: block;
+  margin-top: 11px;
+  font-family: "Roboto", sans-serif;
 }
-
 input[type="text"] {
   background: none;
   border: 1px solid #ffffff;
@@ -195,22 +198,29 @@ input[type="text"] {
   margin-right: -10px;
 }
 .onTweet > .postUrl {
-  border-radius: 10px !important;
-  width: 477px;
+  border-radius: 15px !important;
+  width: 425px;
   height: 246px;
-  margin-top: -17px;
+  margin-top: -38px;
+  margin-left: 54px;
 }
 #allTweets h3 {
   display: inline-block;
   text-align: left;
   padding: 20px;
-  margin-top: -70px;
+  margin-top: -68px;
   margin-left: 39px;
+  font-weight: bold;
+  font-size: 1em;
 }
 #userTweets h3 {
   display: inline-block;
   text-align: left;
   padding: 20px;
+  margin-top: -68px;
+  margin-left: 39px;
+  font-weight: bold;
+  font-size: 1em;
 }
 /* .tweetImg{
   width: 50px;
@@ -223,4 +233,6 @@ input[type="text"] {
 .tweetEmail {
   font-size: 0.75em;
   color: darkgray;
+  margin-left: 5px;
+  font-weight: lighter;
 }
